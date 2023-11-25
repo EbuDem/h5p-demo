@@ -1,0 +1,27 @@
+{
+    "title": "UML Test oder so",
+    "language": "en",
+    "author": "Miki A. Zehtner",
+    "license": "CC BY-SA",
+    "licenseVersion": "4.0",
+    "authors": [
+        {
+            "name": "Miki A. Zehetner",
+            "role": "Author"
+        }
+    ],
+    "preloadedDependencies": [
+        {
+            "machineName": "H5P.UML",
+            "majorVersion": 1,
+            "minorVersion": 0
+        }
+    ],
+    "preloadedJs": [
+        {"path": "content/H5P.UML/p5.js"}
+    ],
+    "mainLibrary": "H5P.UML",
+    "embedTypes": [
+        "div"
+    ]
+}

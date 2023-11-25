@@ -1,4 +1,3 @@
-
 :root {
     --primary: #1e90ff;
     --white: #ffffff;
@@ -23,11 +22,16 @@ section#main {
 
 div.h5p-content {
     margin-bottom: 2rem;
-    width: 40rem;
+    width:  100rem;
 }
 
 div.h5p-content:last-of-type {
     margin-bottom: 0;
+}
+
+#h5p-container
+{
+    height: 100rem!important;
 }
 
 section#footer {
