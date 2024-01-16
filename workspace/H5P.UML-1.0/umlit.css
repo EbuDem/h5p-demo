@@ -1,25 +1,28 @@
-.h5p-greetingcard {
-    width: 400px;
-    margin: 0 auto;
-    border: 1px solid #ccc;
-    box-shadow: 2px 2px 4px #ccc;
-  }
-  .h5p-greetingcard .greeting-image {
-    width: 100%;
-    height: auto;
-  }
-  .h5p-greetingcard .greeting-text {
-    width: auto;
-    margin: 16px;
-    font-family: fantasy;
-    font-size: 20px;
-    font-weight: bold;
-    line-height: 24px;
-    text-align: center;
-  }
+#main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
+#h5p-uml-draganddrop
+{
+  display: flex;
+  justify-content: center;
+}
+
+#canvas-wrapper 
+{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 #canvas-wrapper > canvas 
 {
     border: 1px solid black;
+}
+
+.prompt-text
+{
+  padding: 2rem 0;
 }

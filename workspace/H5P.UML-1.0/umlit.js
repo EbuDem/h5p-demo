@@ -12,7 +12,7 @@ let loading = 0;
 let draggedEntity = null;
 let dragDeltaX = 0;
 let dragDeltaY = 0;
-let showAnswers = true;
+let showAnswers = false;
 let correctColor;
 let wrongColor;
 
@@ -20,12 +20,20 @@ H5P.UML = (function ($) {
   /**
    * Constructor function.
    */
-  function C(options, id) {
+  function Umlit(options, id) {
     // Extend defaults with provided options
     this.options = $.extend(true, {}, {
     }, options);
     // Keep provided id.
     this.id = id;
+    console.log(this.id);
+    let exercise = JSON.parse(htmlDecode(this.options.exercise));
+
+    entities = exercise.entities;
+    snapZones = exercise.snapZones;
+    connections = exercise.connections;
+    loading = 1;
+    H5P.EventDispatcher.call(this);
   };
 
   /**
@@ -34,25 +42,49 @@ H5P.UML = (function ($) {
    *
    * @param {jQuery} $container
    */
-  C.prototype.attach = function ($container) {
-    // Set class on container to identify it as a greeting card
-    // container.  Allows for styling later.
-    $container.addClass("h5p-uml-draganddrop");
-    // Add image if provided.
+  Umlit.prototype.attach = function ($container) {
+    var self = this;
 
-    // Add greeting text.
-    $container.append('<div class="prompt-text">' + this.options.prompt + '</div>');
+    $container.attr('id', "h5p-uml-draganddrop");
 
-    // Add Canvas Parent.
-    $container.append('<div id="canvas-wrapper"></div>');
+    self.mainWrapper = $('<div>', {
+      'id' : "umlit-main"
+    }).appendTo($container);
 
-    entities = this.options.entities;
-    snapZones = this.options.snapZones;
-    connections = this.options.connections;
-    loading = 1;
+
+    // Add prompt
+    self.promptText = $('<div>', {
+      'class': 'prompt-text',
+      'text': this.options.prompt
+    }).appendTo(self.mainWrapper);
+
+    // Add canvas parent
+    self.canvasWrapper = $('<div>', {
+      'id': 'canvas-wrapper'
+    }).appendTo(self.mainWrapper);
+
+    // Attach button to continue to next prompt
+    self.attachButton(self.mainWrapper);
   };
 
-  return C;
+  Umlit.prototype.attachButton = function(parent)
+  {
+    self.responseInput = $('<button>', {
+      'class': "nav-forward",
+      'type': 'button'
+    }).appendTo(parent);
+
+    $(self.responseInput).html("Next");
+
+    // Listen to Enter key to submit answer
+    self.responseInput.on('click', function (e) {
+      console.log("showAnswers",showAnswers);
+      showAnswers = true;
+      noLoop(); //adasdaasddsas
+    });
+  }
+
+  return Umlit;
 })(H5P.jQuery);
 
 
@@ -61,10 +93,21 @@ function setup() {
   canvas = createCanvas(1000, 1000); // Create a canvas using p5.js
   correctColor = color(125,255,125);
   wrongColor = color(255,125,125);
-
 }
 
-function draw() {
+function mouseDragged()
+{
+  let entity = getEntityOnCoords(mouseX, mouseY);
+  let entityIndex = entities.indexOf(entity);
+
+  let belongingZone = snapZones.find(zone => zone.entity == entityIndex)
+  if(belongingZone !== undefined)
+  {
+    belongingZone.entity = null;
+  }
+}
+
+function draw() { 
   background(255);
 
   if (loading == 1)
@@ -103,16 +146,31 @@ function drawEntities()
   }
 
 }
+
+function htmlDecode(input){
+  var e = document.createElement('div');
+  e.innerHTML = input;
+  return e.childNodes[0].nodeValue;
+}
+
 function mousePressed() {
+  if(showAnswers)
+    return;
+
   if (!draggedEntity) {
     draggedEntity = getEntityOnCoords(mouseX, mouseY);
-    dragDeltaX = draggedEntity.x - mouseX;
-    dragDeltaY = draggedEntity.y - mouseY;
+    if(draggedEntity)
+    {
+      dragDeltaX = draggedEntity.x - mouseX;
+      dragDeltaY = draggedEntity.y - mouseY;
+    }
   }
 }
 
-
 function mouseReleased() {
+  if(showAnswers)
+    return;
+
   draggedEntity = null;
   checkSnap();
 }
@@ -138,7 +196,7 @@ function checkSnap() {
     for (let i = 0; i < entities.length; i++) {
       let entity = entities[i];
       let magSqrd = calcDistanceSqrFromCenter(entity, zone);
-      console.log(magSqrd);
+  
       if (magSqrd < radius * radius) {
         var center = getCenter(zone);
         entity.x = center.x - entity.width / 2;
@@ -146,7 +204,6 @@ function checkSnap() {
         snapZones[j].entity = i;
       }
     }
-
   }
 }
 
@@ -162,7 +219,6 @@ function calcDistanceSqrFromCenter(first, second) {
   let secondCenter = getCenter(second);
   return (secondCenter.x - center.x) * (secondCenter.x - center.x) + (secondCenter.y - center.y) * (secondCenter.y - center.y);
 }
-
 
 function moveEntity() {
   if (!draggedEntity)
@@ -181,12 +237,15 @@ function drawSnapZones() {
       continue;
 
     text(i,zone.x,zone.y);
+    drawingContext.setLineDash([10,10]);
     stroke(120)
     noFill();
     rect(zone.x, zone.y, zone.width, zone.height);
+    drawingContext.setLineDash([]);
   }
 }
 
+// Returns the entity at the given cords
 function getEntityOnCoords(x, y) {
   for (let i = 0; i < entities.length; i++) {
     var entity = entities[i];
@@ -222,7 +281,6 @@ function drawEntity(entity,color) {
     text(attribute, entity.x + paddingX, attrStartY + attrLineHeight * i);
   }
 }
-
 
 function setPositionsForEntities() {
   for (let i = 0; i < entities.length; i++) {
@@ -276,7 +334,6 @@ function labelLine(startPos,endPos, relativeY,labelText, percentage)
   noStroke();
   textStyle(NORMAL);
   text(labelText,labelX,labelY);
-
 }
 
 function drawArrow(startPos, endPos) {
@@ -293,7 +350,6 @@ function drawArrow(startPos, endPos) {
 
   );
 }
-
 
 function getSide(obj, side, percentage = 0.5) {
   let line = { x: null, y: null };

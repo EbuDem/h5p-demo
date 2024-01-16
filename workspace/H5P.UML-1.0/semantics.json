@@ -1,8 +1,14 @@
-
 [
   {
-    "name": "name",
+    "name": "prompt",
     "type": "text",
-    "label": "What is your name?"
+    "label": "Prompt"
+
+  },
+  {
+    "name": "exercise",
+    "type" : "text",
+    "label": "Exercise",
+    "widget": "textarea"
   }
 ]

@@ -1,0 +1,13 @@
+{
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 1000,
+    "files.autoSaveTimeout": 5000,
+    "files.autoSaveFocusChange": true,
+    "files.associations": {
+      "*.js": "javascript"
+    },
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    },
+    "tasks.autoDetect": "onReload"
+  }
