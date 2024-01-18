@@ -1,6 +1,5 @@
-
-var H5P = H5P || {};
-
+"use strict";
+var  DEBUG = false; 
 let canvas = null;
 let entities = [];
 let snapZones = [];
@@ -16,83 +15,95 @@ let showAnswers = false;
 let correctColor;
 let wrongColor;
 
+
+var H5P = H5P || {};
+
 H5P.UML = (function ($) {
-  /**
-   * Constructor function.
-   */
-  function Umlit(options, id) {
-    // Extend defaults with provided options
-    this.options = $.extend(true, {}, {
-    }, options);
-    // Keep provided id.
-    this.id = id;
-    console.log(this.id);
-    let exercise = JSON.parse(htmlDecode(this.options.exercise));
+  class Umlit {
+    constructor(options, id) {
+      this.options = $.extend(true, {}, {});
+      this.exercises = [];
+      this.id = id;
 
-    entities = exercise.entities;
-    snapZones = exercise.snapZones;
-    connections = exercise.connections;
-    loading = 1;
-    H5P.EventDispatcher.call(this);
-  };
+      this.fetchExercises();
+      loading = 1;
+      H5P.EventDispatcher.call(this);
+    }
 
-  /**
-   * Attach function called by H5P framework to insert H5P content into
-   * page
-   *
-   * @param {jQuery} $container
-   */
-  Umlit.prototype.attach = function ($container) {
-    var self = this;
+    async fetchExercises() {
+      try {
+        const response = await fetch(H5P.getPath("content/umlit-manifest.json", this.id));
+        const arrayJson = await response.json();
 
-    $container.attr('id', "h5p-uml-draganddrop");
+        const totalCount = arrayJson.exercises.length;
+        let fetchedCount = 0;
 
-    self.mainWrapper = $('<div>', {
-      'id' : "umlit-main"
-    }).appendTo($container);
+        for (let exercise of arrayJson.exercises) {
+          const exerciseResponse = await fetch(H5P.getPath(`content/${exercise}`, this.id));
+          const exerciseJson = await exerciseResponse.json();
 
+          this.exercises.push(exerciseJson);
+          fetchedCount++;
 
-    // Add prompt
-    self.promptText = $('<div>', {
-      'class': 'prompt-text',
-      'text': this.options.prompt
-    }).appendTo(self.mainWrapper);
+          if (fetchedCount === totalCount && this.onLoadedExercises) {
+            this.onLoadedExercises(this.exercises);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching exercises:", error);
+      }
+    }
 
-    // Add canvas parent
-    self.canvasWrapper = $('<div>', {
-      'id': 'canvas-wrapper'
-    }).appendTo(self.mainWrapper);
+    onLoadedExercises(exercises) {
+      console.log("onLoadedExercises", exercises);
+      if (exercises.length === 0) {
+        console.error("Error: No exercises loaded");
+      }
+      this.setExercise(exercises[0]);
+    }
 
-    // Attach button to continue to next prompt
-    self.attachButton(self.mainWrapper);
-  };
+    setExercise(exercise) {
+      entities = exercise.entities;
+      snapZones = exercise.snapZones;
+      connections = exercise.connections;
+      this.promptText.html(exercise.prompt)
+    }
 
-  Umlit.prototype.attachButton = function(parent)
-  {
-    self.responseInput = $('<button>', {
-      'class': "nav-forward",
-      'type': 'button'
-    }).appendTo(parent);
+    attach($container) {
+      $container.attr('id', "h5p-uml-draganddrop");
 
-    $(self.responseInput).html("Next");
+      this.mainWrapper = $('<div>', { 'id': "umlit-main" }).appendTo($container);
 
-    // Listen to Enter key to submit answer
-    self.responseInput.on('click', function (e) {
-      console.log("showAnswers",showAnswers);
-      showAnswers = true;
-      noLoop(); //adasdaasddsas
-    });
+      this.promptText = $('<div>', { 'class': 'prompt-text' }).appendTo(this.mainWrapper);
+
+      this.canvasWrapper = $('<div>', { 'id': 'canvas-wrapper' }).appendTo(this.mainWrapper);
+
+      this.attachButton(this.mainWrapper);
+    }
+
+    attachButton(parent) {
+      this.responseInput = $('<button>', { 'class': "nav-forward", 'type': 'button' }).appendTo(parent);
+
+      $(this.responseInput).html("Next");
+
+      this.responseInput.on('click', (e) => {
+        console.log("showAnswers", showAnswers);
+        showAnswers = true;
+        noLoop();
+      });
+    }
   }
+
 
   return Umlit;
 })(H5P.jQuery);
 
-
-// main.js
 function setup() {
   canvas = createCanvas(1000, 1000); // Create a canvas using p5.js
   correctColor = color(125,255,125);
   wrongColor = color(255,125,125);
+
+  noLoop();
 }
 
 function mouseDragged()
@@ -141,18 +152,11 @@ function drawEntities()
       }
     
     }
-    text(i+"",entity.x,entity.y);
+    if(DEBUG) text(i+"",entity.x,entity.y);
     drawEntity(entity,color)
   }
 
 }
-
-function htmlDecode(input){
-  var e = document.createElement('div');
-  e.innerHTML = input;
-  return e.childNodes[0].nodeValue;
-}
-
 function mousePressed() {
   if(showAnswers)
     return;
@@ -236,7 +240,9 @@ function drawSnapZones() {
     if (zone.entity !== null)
       continue;
 
-    text(i,zone.x,zone.y);
+      
+    if(DEBUG) text(i,zone.x,zone.y);
+
     drawingContext.setLineDash([10,10]);
     stroke(120)
     noFill();
