@@ -1,100 +1,57 @@
 {
-    "prompt": "Folgendes UML Diagram ist gegeben, versuchen Sie die zugehörigen Klassen richtig ins Diagram zu platzieren.",
-    "entities": [
-      {
-        "name": "Benutzer",
-        "width": 255,
-        "startPos": {
-          "x": 100,
-          "y": 100
-        },
-        "attributes": [
-          "+ Name : String",
-          "+ Alter : String",
-          "+ E-Mail : String",
-          "+ Matrikelnummer : String"
-        ]
-      },
-      {
-        "name": "Professor",
-        "width": 255,
-        "startPos": {
-          "x": 100,
-          "y": 100
-        },
-        "attributes": [
-          "Name",
-          "Alter",
-          "E-Mail"
-        ]
-      },
-      {
-        "name": "Zeugnis",
-        "width": 255,
-        "startPos": {
-          "x": 100,
-          "y": 100
-        },
-        "attributes": [
-          "Ausgestellungsdatum",
-          "Note",
-          "Lehrveranstalung",
-          "Professor"
-        ]
-      }
-    ],
-    "snapZones": [
-      {
-        "x": 600,
-        "y": 100,
-        "height": 200,
-        "width": 300,
-        "entity": null,
-        "correctEntity": 2
-      },
-      {
-        "x": 75,
-        "y": 600,
-        "height": 200,
-        "width": 300,
-        "entity": null,
-        "correctEntity": 0
-      },
-      {
-        "x": 700,
-        "y": 600,
-        "height": 200,
-        "width": 300,
-        "entity": null,
-        "correctEntity": 1
-      }
-    ],
-    "connections": [
-      {
-        "start": {
-          "zone": 0,
-          "side": "bottom",
-          "tip": "none",
-          "perc": 0.45
-        },
-        "end": {
-          "zone": 1,
-          "side": "top",
-          "tip": "none"
-        }
-      },
-      {
-        "start": {
-          "zone": 2,
-          "side": "top",
-          "tip": "noe"
-        },
-        "end": {
-          "zone": 0,
-          "perc": 0.55,
-          "side": "bottom",
-          "tip": "none"
-        }
-      }
-    ]
-  }
+  "prompt": "Wir möchten Informationen über verschiedene Schulen festhalten. Beschreiben Sie eine Klasse, die ein Objekt aus der realen Welt repräsentiert: Eine Schule. Schulen haben einen Namen, eine Adresse, eine gewisse Anzahl an Lehrern und Schülern. Wählen Sie die Klasse aus, die am besten zu den folgenden Beschreibungen passt.",
+  "entities": [
+    {
+      "name": "Schule",
+      "attributes": [
+        "+ Name : String",
+        "+ Adresse : String",
+        "+ Lehreranzahl : int",
+        "+ Schüleranzahl : int"
+      ],
+      "methods": [
+        "+ addLehrer(lehrer: Lehrer) : void",
+        "+ addSchüler(schüler: Schüler) : void"
+      ]
+    },
+    {
+      "name": "Schule",
+      "attributes": [
+        "+ Name : String",
+        "+ Standort : String",
+        "+ Lehreranzahl : int",
+        "+ Studentenanzahl : int"
+      ],
+      "methods": [
+        "+ addProfessor(professor: Professor) : void",
+        "+ addStudent(student: Student) : void"
+      ]
+    },
+    {
+      "name": "Schule",
+      "attributes": [
+        "+ Name : String",
+        "+ Adresse : String",
+        "+ Klassenanzahl : int",
+        "+ Schüleranzahl : int"
+      ],
+      "methods": [
+        "+ addLehrer(lehrer: Lehrer) : void",
+        "+ addSchüler(schüler: Schüler) : void"
+      ]
+    },
+    {
+      "name": "Schule",
+      "attributes": [
+        "+ Name : String",
+        "+ Adresse : String",
+        "+ Lehreranzahl : int",
+        "+ AuszubildendeAnzahl : int"
+      ],
+      "methods": [
+        "+ addLehrer(lehrer: Lehrer) : void",
+        "+ addAuszubildender(auszubildender: Auszubildender) : void"
+      ]
+    }
+  ]
+}

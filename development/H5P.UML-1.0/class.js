@@ -1,56 +1,73 @@
 class UMLClass {
-    static nameLineHeight = 20;
-    static paddingX = 5;
-    static paddingY = 15;
-    static attrLineHeight = 15;
-
-    
-    constructor(className, attributes, methods, startX, startY) {
+        
+    constructor(className, attributes, methods, ) {
         this.className = className;
         this.attributes = attributes || [];
         this.methods = methods || [];
-        this.draggable = false;
-        this.x = startX; 
-        this.y = startY;
-        this.width = 200;
-        this.height =  15  + 20 * this.attributes.length;;
+        this.highlight = false;
+        this.createDOMElement();
       }
   
     addAttribute(attribute) {
       this.attributes.push(attribute);
+      this.refreshAttributesInDOM();
     }
   
     addMethod(method) {
       this.methods.push(method);
+      this.refreshMethodsInDOM();
     }
 
-    setPosition(x,y)
+    refreshDOMElement()
     {
-        this.x = x || this.x;
-        this.y = y || this.y;
+      if(this.highlight)
+        this.domElement.addClass("umlit-class-highlight")
+      else 
+      this.domElement.removeClass("umlit-class-highlight")
+
+        this.domElement.find("umlit-class-name").html(this.className);
+        this.refreshAttributesInDOM();
+        this.refreshMethodsInDOM();
+    }
+
+    createDOMElement()
+    {
+        this.domElement =  $('<div>', { 'class': "umlit-class" });
+        
+        var nameContainer = $('<div>', { 'class': "umlit-class-name" });
+        nameContainer.html(this.className)
+        nameContainer.appendTo(this.domElement);
+
+        var attributesContainer = $('<ul>', { 'class': "umlit-class-attributes" });
+        attributesContainer.appendTo(this.domElement);
+
+        var methodsContainer = $('<ul>', { 'class': "umlit-class-methods" });
+        methodsContainer.appendTo(this.domElement);
+
+        this.refreshAttributesInDOM();
+        this.refreshMethodsInDOM();
     }
   
-    draw() {
-   
-        stroke(0);
-       
-        fill(255);
-      
-        rect(this.x, this.y, this.width, this.height);
-        line(this.x, this.y + UMLClass.nameLineHeight, this.x + this.width, this.y + UMLClass.nameLineHeight);
-      
-        fill(0);
-        noStroke();
-        textStyle(BOLD);
-        text(this.className, this.x + UMLClass.paddingX, this.y + UMLClass.paddingY);
-      
-        let attrStartY = this.y + UMLClass.nameLineHeight + UMLClass.paddingY;
-      
-        // List Attributes
-        textStyle(NORMAL);
-        for (let i = 0; i < this.attributes.length; i++) {
+    refreshAttributesInDOM()
+    {
+        let attributesContainer = this.domElement.find(".umlit-class-attributes");
+        attributesContainer.html("");
+        for(let i = 0; i < this.attributes.length; i++)
+        {
           let attribute = this.attributes[i];
-          text(attribute, this.x + UMLClass.paddingX, attrStartY + UMLClass.attrLineHeight * i);
+          $('<li>', { 'class': "umlit-class-attribute" }).html(attribute).appendTo(attributesContainer)
+        }
+    }
+
+    refreshMethodsInDOM()
+    {
+        let methodsContainer = this.domElement.find(".umlit-class-methods")
+        methodsContainer.html("");
+        // TODO: Change this when methods are in exercise json
+        for(let i = 0; i < this.methods.length; i++)
+        {
+          let attribute = this.methods[i];
+          $('<li>', { 'class': "umlit-class-method" }).html(attribute).appendTo(methodsContainer)
         }
     }
   }
