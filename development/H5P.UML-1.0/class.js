@@ -1,10 +1,10 @@
 class UMLClass {
         
-    constructor(className, attributes, methods, ) {
+    constructor(className, attributes, methods ) {
         this.className = className;
         this.attributes = attributes || [];
         this.methods = methods || [];
-        this.highlight = false;
+        this.isSelected = false;
         this.createDOMElement();
       }
   
@@ -20,7 +20,7 @@ class UMLClass {
 
     refreshDOMElement()
     {
-      if(this.highlight)
+      if(this.isSelected)
         this.domElement.addClass("umlit-class-highlight")
       else 
       this.domElement.removeClass("umlit-class-highlight")
@@ -72,5 +72,3 @@ class UMLClass {
     }
   }
 
-
-  

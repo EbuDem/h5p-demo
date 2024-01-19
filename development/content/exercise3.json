@@ -1,0 +1,57 @@
+{
+  "prompt": "Wir möchten Informationen über verschiedene Banken festhalten. Beschreiben Sie eine Klasse, die ein Objekt aus der realen Welt repräsentiert: Eine Bank. Banken haben einen Namen, eine Adresse, eine gewisse Anzahl an Mitarbeitern und können Bankkonten hinzufügen sowie Mitarbeiterinformationen aktualisieren. Wählen Sie die Klasse aus, die am besten zu den folgenden Beschreibungen passt.",
+  "entities": [
+    {
+      "name": "Bank",
+      "attributes": [
+        "+ Name : String",
+        "+ Adresse : String",
+        "+ Mitarbeiteranzahl : int",
+        "+ Bankkonten : List<Konto>"
+      ],
+      "methods": [
+        "+ addKonto(konto: Konto) : void",
+        "+ updateMitarbeiterInfo(neueInfo: String) : void"
+      ]
+    },
+    {
+      "name": "Bank",
+      "attributes": [
+        "+ Name : String",
+        "+ Standort : String",
+        "+ Mitarbeiteranzahl : int",
+        "+ Filialen : int"
+      ],
+      "methods": [
+        "+ addFiliale() : void",
+        "+ updateMitarbeiterInfo(neueInfo: String) : void"
+      ]
+    },
+    {
+      "name": "Bank",
+      "attributes": [
+        "+ Name : String",
+        "+ Adresse : String",
+        "+ Mitarbeiterzahl : int",
+        "+ Kunden : List<Kunde>"
+      ],
+      "methods": [
+        "+ addKunde(kunde: Kunde) : void",
+        "+ updateMitarbeiterInfo(neueInfo: String) : void"
+      ]
+    },
+    {
+      "name": "Bank",
+      "attributes": [
+        "+ Name : String",
+        "+ Standort : String",
+        "+ Mitarbeiteranzahl : int",
+        "+ Sicherheitsstufe : String"
+      ],
+      "methods": [
+        "+ erhöheSicherheitsstufe(neueStufe: String) : void",
+        "+ updateMitarbeiterInfo(neueInfo: String) : void"
+      ]
+    }
+  ]
+}
