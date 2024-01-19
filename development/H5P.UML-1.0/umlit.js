@@ -1,12 +1,9 @@
 "use strict";
-var  DEBUG = false; 
+var DEBUG = true;
 let canvas = null;
 let entities = [];
 let snapZones = [];
 let connections = [];
-let paddingX = 5;
-let paddingY = 15;
-let attrLineHeight = 25;
 let loading = 0;
 let draggedEntity = null;
 let dragDeltaX = 0;
@@ -14,12 +11,13 @@ let dragDeltaY = 0;
 let showAnswers = false;
 let correctColor;
 let wrongColor;
-
+let grid = new Grid(50,50,900,900,5,5);
 
 var H5P = H5P || {};
 
 H5P.UML = (function ($) {
   class Umlit {
+   
     constructor(options, id) {
       this.options = $.extend(true, {}, {});
       this.exercises = [];
@@ -60,12 +58,13 @@ H5P.UML = (function ($) {
         console.error("Error: No exercises loaded");
       }
       this.setExercise(exercises[0]);
+      listOptions();
     }
 
     setExercise(exercise) {
-      entities = exercise.entities;
-      snapZones = exercise.snapZones;
-      connections = exercise.connections;
+      entities = exercise.entities.map(entity => new UMLClass(entity.name, entity.attributes, [], entity.startPos.x, entity.startPos.y));
+      // snapZones = exercise.snapZones;
+      // connections = exercise.connections;
       this.promptText.html(exercise.prompt)
     }
 
@@ -100,10 +99,27 @@ H5P.UML = (function ($) {
 
 function setup() {
   canvas = createCanvas(1000, 1000); // Create a canvas using p5.js
-  correctColor = color(125,255,125);
-  wrongColor = color(255,125,125);
+  correctColor = color(125, 255, 125);
+  wrongColor = color(255, 125, 125);
 
-  noLoop();
+  canvas.parent(document.querySelector("#canvas-wrapper"))
+}
+
+function keyPressed(e)
+{
+  if(key == "1")
+    DEBUG = !DEBUG;
+}
+function listOptions() {
+  console.log("listOptions()")
+  let startX = 150;
+  let startY = 150;
+  let marginY  = 150;
+  for (let i = 0; i < entities.length; i++) {
+    let entity = entities[i];
+
+    grid.placeInGrid(entity,i,0);
+  }
 }
 
 function mouseDragged()
@@ -118,53 +134,48 @@ function mouseDragged()
   }
 }
 
-function draw() { 
+function draw() {
   background(255);
 
-  if (loading == 1)
-    setPositionsForEntities();
-
   drawSnapZones();
+  grid.debugDraw();
   moveEntity();
   stroke(255);
   noFill();
   drawEntities();
-
   drawConnections();
 }
 
-function drawEntities() 
-{
+function drawEntities() {
   for (let i = 0; i < entities.length; i++) {
     let entity = entities[i];
     let belongingZone = snapZones.find(zone => zone.entity == i)
     let color;
-    if(belongingZone  !== undefined)
-    {
+    if (belongingZone !== undefined) {
       let correct = belongingZone.correctEntity == i;
-   
-      if(showAnswers)
-      {
-        if(correct)
+
+      if (showAnswers) {
+        if (correct)
           color = correctColor;
-        else 
+        else
           color = wrongColor;
       }
-    
-    }
-    if(DEBUG) text(i+"",entity.x,entity.y);
-    drawEntity(entity,color)
-  }
 
+    }
+    if (DEBUG) text(i + "", entity.x, entity.y);
+    entity.draw()
+  }
 }
+
 function mousePressed() {
   if(showAnswers)
     return;
 
   if (!draggedEntity) {
-    draggedEntity = getEntityOnCoords(mouseX, mouseY);
-    if(draggedEntity)
+    var targetEntity = getEntityOnCoords(mouseX, mouseY);
+    if(targetEntity && targetEntity.draggable)
     {
+      draggedEntity = targetEntity;
       dragDeltaX = draggedEntity.x - mouseX;
       dragDeltaY = draggedEntity.y - mouseY;
     }
@@ -172,7 +183,7 @@ function mousePressed() {
 }
 
 function mouseReleased() {
-  if(showAnswers)
+  if (showAnswers)
     return;
 
   draggedEntity = null;
@@ -200,7 +211,7 @@ function checkSnap() {
     for (let i = 0; i < entities.length; i++) {
       let entity = entities[i];
       let magSqrd = calcDistanceSqrFromCenter(entity, zone);
-  
+
       if (magSqrd < radius * radius) {
         var center = getCenter(zone);
         entity.x = center.x - entity.width / 2;
@@ -240,10 +251,10 @@ function drawSnapZones() {
     if (zone.entity !== null)
       continue;
 
-      
-    if(DEBUG) text(i,zone.x,zone.y);
 
-    drawingContext.setLineDash([10,10]);
+    if (DEBUG) text(i, zone.x, zone.y);
+
+    drawingContext.setLineDash([10, 10]);
     stroke(120)
     noFill();
     rect(zone.x, zone.y, zone.width, zone.height);
@@ -262,46 +273,7 @@ function getEntityOnCoords(x, y) {
   }
 }
 
-function drawEntity(entity,color) {
-  let nameLineHeight = 20;
-
-  stroke(0);
-  if(color)
-    stroke(color)
-  fill(255);
-
-  rect(entity.x, entity.y, entity.width, entity.height);
-  line(entity.x, entity.y + nameLineHeight, entity.x + entity.width, entity.y + nameLineHeight);
-
-  fill(0);
-  noStroke();
-  textStyle(BOLD);
-  text(entity.name, entity.x + paddingX, entity.y + paddingY);
-
-  let attrStartY = entity.y + nameLineHeight + paddingY;
-
-  // List Attributes
-  textStyle(NORMAL);
-  for (let i = 0; i < entity.attributes.length; i++) {
-    let attribute = entity.attributes[i];
-    text(attribute, entity.x + paddingX, attrStartY + attrLineHeight * i);
-  }
-}
-
-function setPositionsForEntities() {
-  for (let i = 0; i < entities.length; i++) {
-    entities[i].x = entities[i].startPos.x;
-    entities[i].y = entities[i].startPos.y;
-    if (!entities[i].height)
-      entities[i].height = paddingY + attrLineHeight * entities[i].attributes.length;
-  }
-
-  canvas.parent(document.getElementById("canvas-wrapper"));
-  loading = 2;
-}
-
 function drawConnections() {
-
   for (let i = 0; i < connections.length; i++) {
     let connection = connections[i];
 
@@ -316,30 +288,29 @@ function drawConnections() {
     let startPos = getSide(startObj, connection.start.side, connection.start.perc);
     let endPos = getSide(endObj, connection.end.side, connection.end.perc);
 
-    if(connection.end.tip == "arrow")
-      drawArrow(startPos,endPos);
-    if(connection.start.tip == "arrow")
-      drawArrow(endPos,startPos);
+    if (connection.end.tip == "arrow")
+      drawArrow(startPos, endPos);
+    if (connection.start.tip == "arrow")
+      drawArrow(endPos, startPos);
 
-    labelLine(startPos,endPos,20,"1",0.15)    
-    labelLine(startPos,endPos,20,"n",0.85)    
+    labelLine(startPos, endPos, 20, "1", 0.15)
+    labelLine(startPos, endPos, 20, "n", 0.85)
     stroke(0);
     line(startPos.x, startPos.y, endPos.x, endPos.y);
   }
 }
 
-function labelLine(startPos,endPos, relativeY,labelText, percentage)
-{
+function labelLine(startPos, endPos, relativeY, labelText, percentage) {
   let angle = atan2(endPos.y - startPos.y, endPos.x - startPos.x);
   let deltaX = endPos.x - startPos.x;
   let deltaY = endPos.y - startPos.y;
 
-  let labelX = startPos.x + deltaX * percentage +  cos(angle + HALF_PI) * relativeY;
+  let labelX = startPos.x + deltaX * percentage + cos(angle + HALF_PI) * relativeY;
   let labelY = startPos.y + deltaY * percentage + sin(angle + HALF_PI) * relativeY;
 
   noStroke();
   textStyle(NORMAL);
-  text(labelText,labelX,labelY);
+  text(labelText, labelX, labelY);
 }
 
 function drawArrow(startPos, endPos) {

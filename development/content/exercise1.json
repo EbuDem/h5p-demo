@@ -5,14 +5,14 @@
         "name": "Benutzer",
         "width": 255,
         "startPos": {
-          "x": 300,
-          "y": 200
+          "x": 100,
+          "y": 100
         },
         "attributes": [
-          "Name",
-          "Alter",
-          "E-Mail",
-          "Matrikelnummer"
+          "+ Name : String",
+          "+ Alter : String",
+          "+ E-Mail : String",
+          "+ Matrikelnummer : String"
         ]
       },
       {
@@ -32,8 +32,8 @@
         "name": "Zeugnis",
         "width": 255,
         "startPos": {
-          "x": 0,
-          "y": 200
+          "x": 100,
+          "y": 100
         },
         "attributes": [
           "Ausgestellungsdatum",
