@@ -1,16 +1,23 @@
 {
-  "title": "UML It",
+  "title": "UML It x",
   "description": "Create UML Diagrams users have to drag and drop",
   "majorVersion": 1,
-  "minorVersion": 0,
+  "minorVersion": 5,
   "patchVersion": 0,
   "runnable": 1,
   "author": "Ebu Demirhan",
   "license": "cc-by-sa",
   "machineName": "H5P.UML",
+  "editorDependencies": [
+    {
+      "machineName": "H5PEditor.UMLEditor",
+      "majorVersion": 1,
+      "minorVersion": 0
+    }
+  ],
   "coreApi": {
     "majorVersion": 1,
-    "minorVersion": 0
+    "minorVersion": 5
   },
   "preloadedJs": [
     {

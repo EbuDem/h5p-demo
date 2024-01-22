@@ -9,6 +9,6 @@
     "name": "exercise",
     "type" : "text",
     "label": "Exercise",
-    "widget": "textarea"
+    "widget": "umlEditor"
   }
 ]

@@ -1,0 +1,23 @@
+
+{
+  "title": "H5PEditor.UMLEditor",
+  "majorVersion": 1,
+  "minorVersion": 0,
+  "patchVersion": 0,
+  "runnable": 0,
+  "machineName": "H5PEditor.UMLEditor",
+  "author": "Ebu Demirhan",
+  "preloadedJs": [
+    {
+      "path": "class.js"
+    },
+    {
+      "path": "umlit-editor.js"
+    }
+  ],
+  "preloadedCss": [
+    {
+      "path": "umlit.css"
+    }
+  ]
+}
