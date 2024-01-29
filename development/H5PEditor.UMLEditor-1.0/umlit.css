@@ -79,6 +79,7 @@
 
 .umlit-class-name 
 {
+  position: relative;
   width: 100%;
   padding: 0.5rem;
   border-bottom: 2px solid rgba(0,0,0,0.3);
