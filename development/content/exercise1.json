@@ -3,6 +3,7 @@
   "entities": [
     {
       "name": "Schule",
+      
       "attributes": [
         "+ Name : String",
         "+ Adresse : String",

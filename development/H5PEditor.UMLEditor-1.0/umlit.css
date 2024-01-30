@@ -86,6 +86,7 @@
   background-color: rgba(0,0,0,0.1);
   font-weight: bold;
   text-align: center;
+  height: 3rem;
 }
 
 .umlit-class-attributes, .umlit-class-methods 

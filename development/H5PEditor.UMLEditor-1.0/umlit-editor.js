@@ -1,8 +1,6 @@
 H5PEditor.widgets.umlEditor = H5PEditor.UMLEditor = (function ($) {
 
   class UmlitEditor {
-
-
   /**
    * Creates color selector.
    *
@@ -19,11 +17,34 @@ H5PEditor.widgets.umlEditor = H5PEditor.UMLEditor = (function ($) {
     this.params = params;
     this.setValue = setValue;
     this.entities = [];
+
+    var decoded = $("<div/>").html(this.params).text();
+
+    let parsedEntities = JSON.parse(decoded);
+    this.entities= parsedEntities.map(parsedEntity => new UMLClass($,parsedEntity.className,parsedEntity.attributes, parsedEntity.methods));
+    
+
+    UMLClass.removeCallback = (entity) => {
+        console.log(entity);
+        console.log(this.entities);
+        let index = this.entities.indexOf(entity);
+        if(index > -1)
+        {
+          console.log("Removing index",index);
+          this.entities.splice(index,1);
+          entity.domElement.remove();
+        }
+    }
+
+    UMLClass.afterEditCallback = (entity) => {
+     this.save();
+    }
   }
 
-  setColor (color) {
-    this.params = color.toHex();
-    this.setValue(this.field, this.params);
+  save () {
+    this.params = this.entities.map(entity => { return  { attributes: entity.attributes, methods: entity.methods, className: entity.className}})
+    console.log("saving", this.field,this.params,this.params);
+    this.setValue(this.field, JSON.stringify(this.params));
   };
 
   getColor () {
@@ -31,7 +52,7 @@ H5PEditor.widgets.umlEditor = H5PEditor.UMLEditor = (function ($) {
   };
 
   addClass() {
-    let classToBeAdded = new UMLClass($,"Test",["+test:String", "+otherTest:int"],["-callPeople():string"]);
+    let classToBeAdded = new UMLClass($,"",[], []);
     classToBeAdded.domElement.appendTo(this.display);
 
     this.entities.push(classToBeAdded);
@@ -74,6 +95,10 @@ H5PEditor.widgets.umlEditor = H5PEditor.UMLEditor = (function ($) {
     this.display = $('<div>', { 'class': 'umlit-display' }).appendTo(this.$container);
     console.log("HO")
     self.$container.appendTo($wrapper);
+
+    this.entities.forEach(element => {
+      element.domElement.appendTo(this.display)
+    });
   };
 
   onSelectedElement(element)
@@ -87,7 +112,7 @@ H5PEditor.widgets.umlEditor = H5PEditor.UMLEditor = (function ($) {
    * @returns {boolean}
    */
   validate() {
-    return (this.params.length === 6);
+    return true;
   };
 
   /**

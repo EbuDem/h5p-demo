@@ -8,11 +8,11 @@ H5P.UML = (function ($) {
 
     constructor(options, id) {
       super();
-      this.options = $.extend(true, {}, {});
+      this.options = options;
       this.exercises = [];
       this.id = id;
       this.multiSelect = false;
-      this.fetchExercises();
+   
       H5P.EventDispatcher.call(this);
       H5P.externalDispatcher.on('xAPI', function (event) {
         console.log(event.data.statement)
@@ -27,30 +27,15 @@ H5P.UML = (function ($) {
 
     }
 
-    async fetchExercises() {
-      try {
-        const response = await fetch(H5P.getPath("content/umlit-manifest.json", this.id));
-        const arrayJson = await response.json();
+    async fetchExercise() {
 
-        const totalCount = arrayJson.exercises.length;
-        let fetchedCount = 0;
-
-        for (let exercise of arrayJson.exercises) {
-          const exerciseResponse = await fetch(H5P.getPath(`content/${exercise}`, this.id));
-          const exerciseJson = await exerciseResponse.json();
-
-          exerciseJson.entities = exerciseJson.entities.map(entity => new UMLClass(entity.name, entity.attributes, entity.methods));
-          this.exercises.push(exerciseJson);
-
-          fetchedCount++;
-
-          if (fetchedCount === totalCount && this.onLoadedExercises) {
-            this.onLoadedExercises(this.exercises);
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching exercises:", error);
-      }
+      var decoded = $("<div/>").html(this.options.exercise).text();
+      let parsedEntities = JSON.parse(decoded);
+      console.log(parsedEntities);
+   
+      this.entities= parsedEntities.map(parsedEntity => new UMLClass($,parsedEntity.className,parsedEntity.attributes, parsedEntity.methods));
+      console.log("hey",this.entities);
+      this.entities.forEach(element => element.domElement.appendTo(this.display));
     }
 
     attach($container) {
@@ -62,7 +47,20 @@ H5P.UML = (function ($) {
       this.display = $('<div>', { 'class': 'umlit-display' }).appendTo(this.mainWrapper);
       this.navigation = $('<div>', { 'class': 'umlit-navigation' }).appendTo(this.mainWrapper);
 
-      this.attachButton(this.navigation);
+      $(document).ready(() => {
+          this.fetchExercise();
+          this.attachButton(this.navigation);
+
+      });
+
+      this.promptText.html(this.options.prompt)
+
+      this.entities.forEach(element => {
+        element.domElement.on("click", (event) => {
+          this.onSelectedElement(element);
+        })
+      });
+
     }
 
     attachButton(parent) {
@@ -120,7 +118,6 @@ H5P.UML = (function ($) {
 
     refreshElements(exercise) {
       this.promptText.html(exercise.prompt)
-      this.entities = exercise.entities;
 
       this.display.html("");
 
@@ -177,7 +174,6 @@ H5P.UML = (function ($) {
       this.currrentExerciseIndex = 0;
       this.refreshElements(this.getCurrentExercise());
 
-      this.showResultPage();
     }
 
     getCurrentExercise() {

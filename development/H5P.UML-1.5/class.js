@@ -1,10 +1,13 @@
 class UMLClass {
-        
-    constructor(className, attributes, methods ) {
+    static $;
+    constructor($, className, attributes, methods ) {
         this.className = className;
         this.attributes = attributes || [];
         this.methods = methods || [];
         this.isSelected = false;
+        UMLClass.$ = $;
+        console.log($);
+        console.log("constructor",this.attributes)
         this.createDOMElement();
       }
   
@@ -32,16 +35,17 @@ class UMLClass {
 
     createDOMElement()
     {
-        this.domElement =  $('<div>', { 'class': "umlit-class" });
+        console.log("jquery", $)
+        this.domElement =  UMLClass.$('<div>', { 'class': "umlit-class" });
         
-        var nameContainer = $('<div>', { 'class': "umlit-class-name" });
+        var nameContainer = UMLClass.$('<div>', { 'class': "umlit-class-name" });
         nameContainer.html(this.className)
         nameContainer.appendTo(this.domElement);
 
-        var attributesContainer = $('<ul>', { 'class': "umlit-class-attributes" });
+        var attributesContainer = UMLClass.$('<ul>', { 'class': "umlit-class-attributes" });
         attributesContainer.appendTo(this.domElement);
 
-        var methodsContainer = $('<ul>', { 'class': "umlit-class-methods" });
+        var methodsContainer = UMLClass.$('<ul>', { 'class': "umlit-class-methods" });
         methodsContainer.appendTo(this.domElement);
 
         this.refreshAttributesInDOM();
@@ -55,7 +59,7 @@ class UMLClass {
         for(let i = 0; i < this.attributes.length; i++)
         {
           let attribute = this.attributes[i];
-          $('<li>', { 'class': "umlit-class-attribute" }).html(attribute).appendTo(attributesContainer)
+          UMLClass.$('<li>', { 'class': "umlit-class-attribute" }).html(attribute).appendTo(attributesContainer)
         }
     }
 
@@ -67,7 +71,7 @@ class UMLClass {
         for(let i = 0; i < this.methods.length; i++)
         {
           let attribute = this.methods[i];
-          $('<li>', { 'class': "umlit-class-method" }).html(attribute).appendTo(methodsContainer)
+          UMLClass.$('<li>', { 'class': "umlit-class-method" }).html(attribute).appendTo(methodsContainer)
         }
     }
   }

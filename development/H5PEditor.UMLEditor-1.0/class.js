@@ -1,5 +1,8 @@
 class UMLClass {
   static $;
+  static removeCallback;
+  static afterEditCallback;
+
   constructor(jQuery, className, attributes, methods) {
     this.className = className;
     this.attributes = attributes || [];
@@ -7,176 +10,191 @@ class UMLClass {
     this.isSelected = false;
     this.editMode = false;
 
-    $ = jQuery;
 
-    this.createDOMElement(jQuery);
+    UMLClass.$ = jQuery;
+
+    this.createDOMElement();
   }
 
-  addAttribute(attribute) {
-    this.attributes.push(attribute);
-    this.refreshAttributesInDOM();
+  // Utility function to create DOM elements
+  createElement(tag, options) {
+    return UMLClass.$(`<${tag}>`, options);
   }
 
-  addMethod(method) {
-    this.methods.push(method);
-    this.refreshMethodsInDOM();
+  // Utility function to add editable list element
+  addEditableListElement(container, value, placeholder) {
+    const liElement = this.createElement("li", { class: "editable" }).appendTo(container);
+    const input = this.createElement("input", { type: "text", placeholder }).appendTo(liElement);
+
+    if (value !== undefined) input.val(value);
+
+    this.addMoveButtons(liElement);
+
+    const deleteButton = this.createElement("button").html("X").appendTo(liElement);
+    deleteButton.on("click", () => {
+      liElement.remove();
+    });
+
+    return liElement;
   }
 
-  isEmpty() {
-    return this.className.trim().length == 0 && this.attributes.length == 0 && this.methods.length == 0;
+  // Utility function to add move buttons
+  addMoveButtons(liElement) {
+    const attributeMoveUpButton = this.createElement("button").html("&uarr;").prependTo(liElement);
+    attributeMoveUpButton.on("click", () => this.moveElement(liElement, "prev"));
+
+    const attributeMoveDownButton = this.createElement("button").html("&darr;").prependTo(liElement);
+    attributeMoveDownButton.on("click", () => this.moveElement(liElement, "next"));
   }
 
-  createDOMElement($) {
-    console.log("createDOMElement", $)
-    this.domElement = $('<div>', { 'class': "umlit-class" });
-
-    this.nameContainer = $('<div>', { 'class': "umlit-class-name" });
-    this.nameContainer.appendTo(this.domElement);
-
-
-
-    this.attributesContainer = $('<ul>', { 'class': "umlit-class-attributes" });
-    this.attributesContainer.appendTo(this.domElement);
-
-    this.methodsContainer = $('<ul>', { 'class': "umlit-class-methods" });
-    this.methodsContainer.appendTo(this.domElement);
-
-    this.refreshDOMElement();
-    this.refreshAttributesInDOM();
-    this.refreshMethodsInDOM();
-
-
-    this.editButton = this.addEditButton(this.attributesContainer, "Edit");
-    this.editButton.on("click", () => this.editAttributes());
-
-    this.editMethodsButton = this.addEditButton(this.methodsContainer, "Edit");
-    this.editMethodsButton.on("click", () => this.editMethods());
-
-    this.editNameButton = this.addEditButton(this.nameContainer, "Edit");
-    this.editNameButton.on("click", () => this.editClassName());
+  // Utility function to move an element in the list
+  moveElement(element, direction) {
+    const adjacentElement = element[direction]('li.editable');
+    if (adjacentElement.length) {
+      element[direction === "prev" ? "insertBefore" : "insertAfter"](adjacentElement);
+    }
   }
 
-  addEditButton(container, text) {
-    container = $(container.find(".umlit-options-container")) || container;
-    var button = $('<button>', { "class": "umlit-options-button", "type": "button" });
-    button.html(text);
-    button.appendTo(container);
+  // Utility function to append options container
+  appendOptionsContainer(container) {
+    const optionsContainer = container.find(".umlit-options-container");
+    if (!optionsContainer.length) {
+      return this.createElement("div", { class: "umlit-options-container" }).appendTo(container);
+    } else {
+      return optionsContainer;
+    }
+  }
+
+  // Utility function to add an edit button
+  addEditButton(container, text, clickHandler) {
+    console.log(`add button ${text} to container`,container.get(0));
+    const optionsContainer = this.appendOptionsContainer(container);
+    const button = this.createElement("button", { class: "umlit-options-button", type: "button" }).html(text).appendTo(optionsContainer);
+
+    if (clickHandler) {
+      button.on("click", clickHandler);
+    }
 
     return button;
   }
 
-  appendOptionsContainer(container)
-  {
-    if(container.find(".umlit-options-container"))
-      return $("<div>", { "class": "umlit-options-container" }).appendTo(container)
-    else
-    console.log("appendOptionsContainer()", "already exists in ", container)
+  // Main function to create DOM elements
+  createDOMElement() {
+    console.log("createDOMElement", UMLClass.$);
+
+    this.domElement = this.createElement("div", { class: "umlit-class" });
+    this.nameContainer = this.createElement("div", { class: "umlit-class-name" }).appendTo(this.domElement);
+    this.attributesContainer = this.createElement("ul", { class: "umlit-class-attributes" }).appendTo(this.domElement);
+    this.methodsContainer = this.createElement("ul", { class: "umlit-class-methods" }).appendTo(this.domElement);
+
+    this.refreshDOMElement();
+
+    this.editButton = this.addEditButton(this.attributesContainer, "Edit", () => this.editAttributes());
+    this.editMethodsButton = this.addEditButton(this.methodsContainer, "Edit", () => this.editMethods());
+    this.addEditButton(this.nameContainer, "Edit", () => this.editClassName());
+    this.removeButton = this.addEditButton(this.nameContainer, "Remove", () => {
+      UMLClass.removeCallback(this);
+    });
   }
 
+  // Main function to edit class name
   editClassName() {
     this.emptyOptions(this.nameContainer);
-    
-    this.nameContainer. contents().filter(function() {
-      return this.nodeType === 3 && $.trim(this.nodeValue) !== '';
+
+    this.nameContainer.contents().filter(function () {
+      return this.nodeType === 3 && UMLClass.$.trim(this.nodeValue) !== '';
     }).remove();
 
-    var saveButton = this.addEditButton(this.nameContainer);
-    saveButton.html("Save");
-    var cancelButton = this.addEditButton(this.nameContainer);
-    cancelButton.html("Cancel");
+    const saveButton = this.addEditButton(this.nameContainer, "Save");
+    const cancelButton = this.addEditButton(this.nameContainer, "Cancel");
 
-    let nameInput = $('<input>', { 'type': 'text', 'placeholder': "Attribute" }).appendTo(this.nameContainer);
-    nameInput.val(this.className);
+    const nameInput = this.createElement("input", { type: "text", placeholder: "Attribute" }).appendTo(this.nameContainer).val(this.className);
 
-    saveButton.on("click", () => {
-      
+    const saveHandler = () => {
       this.className = nameInput.val();
       this.refreshNameInDOM();
       this.emptyOptions(this.nameContainer);
 
-        
-      this.editButton = this.addEditButton(this.nameContainer, "Edit");
-      this.editButton.on("click", () => this.editClassName())
+      this.editButton = this.addEditButton(this.nameContainer, "Edit", () => this.editClassName());
+      this.editButton = this.addEditButton(this.nameContainer, "Remove", () => UMLClass.removeCallback(this));
+      UMLClass.afterEditCallback(this);
+    };
 
-    })
-
+    saveButton.on("click", saveHandler);
     cancelButton.on("click", () => {
       this.refreshNameInDOM();
       this.emptyOptions(this.nameContainer);
-  
-      this.editButton = this.addEditButton(this.nameContainer, "Edit");
-      this.editButton.on("click", () => this.editClassName())
-    })
-    
+      this.editButton = this.addEditButton(this.nameContainer, "Edit", () => this.editClass());
+    });
   }
 
+
+  // Main function to refresh class name in DOM
   refreshNameInDOM() {
-    console.log("refreshNameInDOM")
-    
-    console.log("xD",this.nameContainer.children("input").remove());
+    console.log("refreshNameInDOM");
+
+    this.nameContainer.children("input").remove();
     this.appendOptionsContainer(this.nameContainer);
     this.nameContainer.append(this.className);
-
   }
 
+  // Main function to refresh entire DOM element
   refreshDOMElement() {
-
-    if (this.isSelected)
-      this.domElement.addClass("umlit-class-highlight")
-    else
-      this.domElement.removeClass("umlit-class-highlight")
+    if (this.isSelected) this.domElement.addClass("umlit-class-highlight");
+    else this.domElement.removeClass("umlit-class-highlight");
 
     this.refreshNameInDOM();
     this.refreshAttributesInDOM();
     this.refreshMethodsInDOM();
   }
 
+  // Main function to refresh attributes in DOM
   refreshAttributesInDOM() {
-    console.log("refreshAttributesInDOM")
+    console.log("refreshAttributesInDOM");
 
-    this.appendOptionsContainer(this.attributesContainer)
+    this.appendOptionsContainer(this.attributesContainer);
     this.attributesContainer.find("li").remove();
+
     for (let i = 0; i < this.attributes.length; i++) {
-      let attribute = this.attributes[i];
-      $('<li>', { 'class': "umlit-class-attribute" }).html(attribute).appendTo(this.attributesContainer);
+      const attribute = this.attributes[i];
+      this.createElement("li", { class: "umlit-class-attribute" }).html(attribute).appendTo(this.attributesContainer);
     }
   }
 
+  // Utility function to empty options in a container
   emptyOptions(container) {
-    container = $(container.find(".umlit-options-container")) || container;
+    container = container.find(".umlit-options-container") || container;
     container.find("button").remove();
   }
 
-
+  // Utility function to apply edits as an array
   applyEditsAsArray(container, list, method) {
-    let elements = container.find("li.editable");
+    const elements = container.find("li.editable");
     this[list] = [];
+
     for (let i = 0; i < elements.length; i++) {
-      let el = $(elements[i]);
-      let input = $(el.find("input"));
+      const el = UMLClass.$(elements[i]);
+      const input = UMLClass.$(el.find("input"));
       this[list].push(input.val());
     }
 
     this.refreshAttributesInDOM();
     this.emptyOptions(container);
-    this.editButton = this.addEditButton(container, "Edit");
-    this.editButton.on("click", () => method());
+    this.editButton = this.addEditButton(container, "Edit", () => method());
+    UMLClass.afterEditCallback(this);
   }
 
-
+  // Main function to edit attributes
   editAttributes() {
-    console.log("editAttributes", this)
+    console.log("editAttributes", this);
     this.attributesContainer.find("li").remove();
 
     this.emptyOptions(this.attributesContainer);
-    var saveButton = this.addEditButton(this.attributesContainer);
-    saveButton.html("Save");
-    var cancelButton = this.addEditButton(this.attributesContainer);
-    cancelButton.html("Cancel");
-
+    const saveButton = this.addEditButton(this.attributesContainer, "Save");
+    const cancelButton = this.addEditButton(this.attributesContainer, "Cancel");
 
     for (let i = 0; i < this.attributes.length; i++) {
-      let attribute = this.attributes[i];
+      const attribute = this.attributes[i];
       this.addEditableListElement(this.attributesContainer, attribute, "Attribute");
     }
 
@@ -185,51 +203,25 @@ class UMLClass {
     cancelButton.on("click", () => {
       this.refreshAttributesInDOM();
       this.emptyOptions(this.attributesContainer);
-      this.editButton = this.addEditButton(this.attributesContainer, "Edit");
-      this.editButton.on("click", () => this.editAttributes())
-    })
+      this.editButton = this.addEditButton(this.attributesContainer, "Edit", () => this.editAttributes());
+    });
 
     saveButton.on("click", () => {
       this.applyEditsAsArray(this.attributesContainer, "attributes", () => this.editAttributes());
-    })
+    });
   }
 
-  addMoveButtons(liElement) {
-    let attributeMoveUpButton = $('<button>').html("&uarr;");
-    liElement.prepend(attributeMoveUpButton);
-    attributeMoveUpButton.on("click", () => {
-      console.log("attribute");
-      var prevAttribute = liElement.prev('li');
-
-      if (prevAttribute.length) {
-        liElement.insertBefore(prevAttribute);
-      }
-    })
-
-    let attributeMoveDownButton = $('<button>').html("&darr;");
-    liElement.prepend(attributeMoveDownButton);
-    attributeMoveDownButton.on("click", () => {
-      console.log("attribute");
-      var nextAttribute = liElement.next('li.editable');
-
-      if (nextAttribute.length) {
-        liElement.insertAfter(nextAttribute);
-      }
-    })
-  }
-
+  // Main function to edit methods
   editMethods() {
-    console.log("editMethods")
+    console.log("editMethods");
     this.methodsContainer.find("li").remove();
 
     this.emptyOptions(this.methodsContainer);
-    var saveButton = this.addEditButton(this.methodsContainer);
-    saveButton.html("Save");
-    var cancelButton = this.addEditButton(this.methodsContainer);
-    cancelButton.html("Cancel");
+    const saveButton = this.addEditButton(this.methodsContainer, "Save");
+    const cancelButton = this.addEditButton(this.methodsContainer, "Cancel");
 
     for (let i = 0; i < this.methods.length; i++) {
-      let method = this.methods[i];
+      const method = this.methods[i];
       this.addEditableListElement(this.methodsContainer, method, "Method");
     }
 
@@ -238,63 +230,46 @@ class UMLClass {
     cancelButton.on("click", () => {
       this.refreshMethodsInDOM();
       this.emptyOptions(this.methodsContainer);
-      this.editMethodsButton = this.addEditButton(this.methodsContainer, "Edit");
-      this.editMethodsButton.on("click", () => this.editMethods())
-    })
+      this.editMethodsButton = this.addEditButton(this.methodsContainer, "Edit", () => this.editMethods());
+    });
 
     saveButton.on("click", () => {
-
       this.applyEditsAsArray(this.methodsContainer, "methods", () => this.editMethods());
       this.refreshMethodsInDOM();
-    })
+    });
   }
 
-  addAdditionalInput(container, placeholder) {
-    console.log("addAdditionalAttributeInput")
-    let additionalLiElement = $('<li>', { 'class': "umlit-class-attribute" }).appendTo(container);
-    let additionalInput = $('<input>', { 'type': 'text', 'placeholder': placeholder }).appendTo(additionalLiElement);
-
-    let saveElementButton = $('<button>').html("Add");
-    saveElementButton.appendTo(additionalLiElement);
-
-    saveElementButton.on("click", (e) => {
-      console.log("addAttribute-click")
-      e.preventDefault();
-      if (additionalInput.val().trim().length > 0) {
-        let newEl = this.addEditableListElement(container, additionalInput.val(), placeholder);
-        additionalLiElement.before(newEl);
-        additionalInput.val("");
-      }
-    })
-  }
-
+  // Main function to refresh methods in DOM
   refreshMethodsInDOM() {
     console.log("refreshMethodsInDOM");
 
     this.appendOptionsContainer(this.methodsContainer);
     this.methodsContainer.find("li").remove();
+
     for (let i = 0; i < this.methods.length; i++) {
-      let method = this.methods[i];
-      $('<li>', { 'class': "umlit-class-method" }).html(method).appendTo(this.methodsContainer)
+      const method = this.methods[i];
+      this.createElement("li", { class: "umlit-class-method" }).html(method).appendTo(this.methodsContainer);
     }
   }
 
+  // Main function to add an additional input
+  addAdditionalInput(container, placeholder) {
+    console.log("addAdditionalAttributeInput");
 
-  addEditableListElement(container, value, placeholder) {
-    let liElement = $("<li>", { "class": "editable" }).appendTo(container);
-    let input = $('<input>', { 'type': 'text', 'placeholder': placeholder }).appendTo(liElement);
-    if (value !== undefined)
-      input.val(value);
+    const additionalLiElement = this.createElement("li", { class: "umlit-class-attribute" }).appendTo(container);
+    const additionalInput = this.createElement("input", { type: "text", placeholder }).appendTo(additionalLiElement);
 
-    this.addMoveButtons(liElement);
+    const saveElementButton = this.createElement("button").html("Add").appendTo(additionalLiElement);
 
-    let deleteButton = $('<button>').html("X");
-    deleteButton.appendTo(liElement);
-    deleteButton.on("click", () => {
-      liElement.remove();
-    })
+    saveElementButton.on("click", (e) => {
+      console.log("addAttribute-click");
+      e.preventDefault();
 
-    return liElement;
+      if (additionalInput.val().trim().length > 0) {
+        const newEl = this.addEditableListElement(container, additionalInput.val(), placeholder);
+        additionalLiElement.before(newEl);
+        additionalInput.val("");
+      }
+    });
   }
 }
-
