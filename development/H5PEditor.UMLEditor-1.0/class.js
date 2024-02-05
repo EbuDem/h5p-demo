@@ -2,6 +2,7 @@ class UMLClass {
   static $;
   static removeCallback;
   static afterEditCallback;
+  static toggleIsAnswerCallback;
 
   constructor(jQuery, className, attributes, methods) {
     this.className = className;
@@ -66,11 +67,12 @@ class UMLClass {
   }
 
   // Utility function to add an edit button
-  addEditButton(container, text, clickHandler) {
+  addEditButton(container, text, clickHandler, cssClass) {
     console.log(`add button ${text} to container`,container.get(0));
     const optionsContainer = this.appendOptionsContainer(container);
     const button = this.createElement("button", { class: "umlit-options-button", type: "button" }).html(text).appendTo(optionsContainer);
-
+    if(cssClass)
+      button.addClass(cssClass);
     if (clickHandler) {
       button.on("click", clickHandler);
     }
@@ -89,12 +91,16 @@ class UMLClass {
 
     this.refreshDOMElement();
 
-    this.editButton = this.addEditButton(this.attributesContainer, "Edit", () => this.editAttributes());
-    this.editMethodsButton = this.addEditButton(this.methodsContainer, "Edit", () => this.editMethods());
-    this.addEditButton(this.nameContainer, "Edit", () => this.editClassName());
-    this.removeButton = this.addEditButton(this.nameContainer, "Remove", () => {
+    this.editButton = this.addEditButton(this.attributesContainer, "", () => this.editAttributes(), "button-edit");
+    this.editMethodsButton = this.addEditButton(this.methodsContainer, "", () => this.editMethods(), "button-edit");
+    this.addEditButton(this.nameContainer, "", () => this.editClassName(), "button-edit");
+    this.removeButton = this.addEditButton(this.nameContainer, "", () => {
       UMLClass.removeCallback(this);
-    });
+    }, "button-remove");
+
+    this.removeButton = this.addEditButton(this.nameContainer, "", () => {
+      UMLClass.toggleIsAnswerCallback(this);
+    }, "button-answer");
   }
 
   // Main function to edit class name
@@ -116,7 +122,10 @@ class UMLClass {
       this.emptyOptions(this.nameContainer);
 
       this.editButton = this.addEditButton(this.nameContainer, "Edit", () => this.editClassName());
-      this.editButton = this.addEditButton(this.nameContainer, "Remove", () => UMLClass.removeCallback(this));
+      this.editButton = this.addEditButton(this.nameContainer, "", () => UMLClass.removeCallback(this), "button-remove");
+      this.removeButton = this.addEditButton(this.nameContainer, "", () => {
+        UMLClass.toggleIsAnswerCallback(this);
+      }, "button-answer");
       UMLClass.afterEditCallback(this);
     };
 
@@ -126,6 +135,16 @@ class UMLClass {
       this.emptyOptions(this.nameContainer);
       this.editButton = this.addEditButton(this.nameContainer, "Edit", () => this.editClass());
     });
+  }
+
+
+  toggleSelected()
+  {
+    this.isSelected = !this.isSelected;
+    if(this.isSelected)
+      this.domElement.addClass("umlit-class-highlight")
+    else 
+      this.domElement.removeClass("umlit-class-highlight")
   }
 
 

@@ -20,9 +20,15 @@ H5PEditor.widgets.umlEditor = H5PEditor.UMLEditor = (function ($) {
 
     var decoded = $("<div/>").html(this.params).text();
 
-    let parsedEntities = JSON.parse(decoded);
-    this.entities= parsedEntities.map(parsedEntity => new UMLClass($,parsedEntity.className,parsedEntity.attributes, parsedEntity.methods));
+    let parsedExercise = JSON.parse(decoded);
+    this.entities= parsedExercise.entities.map(parsedEntity => new UMLClass($,parsedEntity.className,parsedEntity.attributes, parsedEntity.methods));
     
+    for(let i = 0; i < parsedExercise.answers.length;i++)
+    {
+      let index = parsedExercise.answers[i];
+      console.log(index);
+      this.entities[index].toggleSelected();
+    }
 
     UMLClass.removeCallback = (entity) => {
         console.log(entity);
@@ -39,10 +45,25 @@ H5PEditor.widgets.umlEditor = H5PEditor.UMLEditor = (function ($) {
     UMLClass.afterEditCallback = (entity) => {
      this.save();
     }
+
+    UMLClass.toggleIsAnswerCallback = (entity) => {
+      entity.toggleSelected();
+      this.save();
+    }
   }
 
   save () {
-    this.params = this.entities.map(entity => { return  { attributes: entity.attributes, methods: entity.methods, className: entity.className}})
+    this.params = {
+      entities: this.entities.map(entity => {
+        return { attributes: entity.attributes, methods: entity.methods, className: entity.className };
+      }),
+      answers: this.entities.map((entity, index) => {
+           if(entity.isSelected)
+            return index
+          else undefined;
+        }).filter((el) => el !== undefined) // Filter entities where isSelected is true
+    };
+
     console.log("saving", this.field,this.params,this.params);
     this.setValue(this.field, JSON.stringify(this.params));
   };
@@ -112,7 +133,8 @@ H5PEditor.widgets.umlEditor = H5PEditor.UMLEditor = (function ($) {
    * @returns {boolean}
    */
   validate() {
-    return true;
+    return this.entities
+    .filter((entity) => entity.isSelected).length > 0;
   };
 
   /**

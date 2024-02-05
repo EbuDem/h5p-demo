@@ -107,7 +107,7 @@
 .umlit-options-container
 {
   position: absolute;
-  top: 0;
+  bottom: 0;
   right: 0;
 }
 
@@ -115,7 +115,7 @@
 .umlit-class-highlight
 {
   box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
-  border: 2px solid rgba(0,0,0,0.9)
+  border: 2px solid rgba(0,128,0,0.9)
 }
 
 .umlit-button:disabled {
@@ -173,6 +173,34 @@
 .umlit-result-item-partial 
 {
   background: rgba(255, 196, 0, 0.05);
+}
+
+
+.umlit-options-button {
+  margin: 0;
+  min-width: 2rem;
+  height: 2rem;
+  background-size: contain;
+  background-repeat: no-repeat;
+  border: 1px solid black;
+}
+
+.button-remove{
+  background-color: red;
+  -webkit-mask: url(icon/trash.svg) no-repeat 100% 100%;
+  mask: url(icon/trash.svg) no-repeat 100% 100%;
+}
+
+.button-edit{
+  background-color: orange;
+  -webkit-mask: url(icon/edit-pencil.svg) no-repeat 100% 100%;
+  mask: url(icon/edit-pencil.svg) no-repeat 100% 100%;
+}
+
+.button-answer{
+  background-color: green;
+  -webkit-mask: url(icon/check.svg) no-repeat 100% 100%;
+  mask: url(icon/check.svg) no-repeat 100% 100%;
 }
 
 #umlit-title 

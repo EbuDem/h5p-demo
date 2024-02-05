@@ -21,6 +21,17 @@ class UMLClass {
       this.refreshMethodsInDOM();
     }
 
+    toggleSelected()
+    {
+      this.isSelected = !this.isSelected;
+      if(this.isSelected)
+        this.domElement.addClass("umlit-class-highlight")
+      else 
+        this.domElement.removeClass("umlit-class-highlight")
+
+      UMLClass.afterEditCallback(this);
+    }
+
     refreshDOMElement()
     {
       if(this.isSelected)

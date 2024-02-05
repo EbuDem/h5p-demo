@@ -12,7 +12,7 @@ H5P.UML = (function ($) {
       this.exercises = [];
       this.id = id;
       this.multiSelect = false;
-   
+
       H5P.EventDispatcher.call(this);
       H5P.externalDispatcher.on('xAPI', function (event) {
         console.log(event.data.statement)
@@ -21,24 +21,25 @@ H5P.UML = (function ($) {
       this.on("xAPI", function (event) {
         console.log(event);
       })
-
-      this.trigger("xAPI");
-
-
     }
 
     async fetchExercise() {
-
+      console.log("fetchExercise");
       var decoded = $("<div/>").html(this.options.exercise).text();
-      let parsedEntities = JSON.parse(decoded);
-      console.log(parsedEntities);
-   
-      this.entities= parsedEntities.map(parsedEntity => new UMLClass($,parsedEntity.className,parsedEntity.attributes, parsedEntity.methods));
-      console.log("hey",this.entities);
+      let parsedExercise = JSON.parse(decoded);
+      console.log("exervcise", parsedExercise);
+
+      this.entities = parsedExercise.entities.map(parsedEntity => new UMLClass($, parsedEntity.className, parsedEntity.attributes, parsedEntity.methods));
+      console.log("hey", this.entities);
       this.entities.forEach(element => element.domElement.appendTo(this.display));
+      this.answers = parsedExercise.answers;
+
+      if(this.answers.length > 1)
+        this.multiSelect = true;
     }
 
     attach($container) {
+      console.log("H5P.attach()")
       $container.attr('id', "h5p-umlit-draganddrop");
 
       this.container = $container;
@@ -48,19 +49,16 @@ H5P.UML = (function ($) {
       this.navigation = $('<div>', { 'class': 'umlit-navigation' }).appendTo(this.mainWrapper);
 
       $(document).ready(() => {
-          this.fetchExercise();
-          this.attachButton(this.navigation);
+        this.fetchExercise();
+        this.attachButton(this.navigation);
+        this.promptText.html(this.options.prompt)
 
+        this.entities.forEach(element => {
+          element.domElement.on("click", (event) => {
+            this.onSelectedElement(element);
+          })
+        });
       });
-
-      this.promptText.html(this.options.prompt)
-
-      this.entities.forEach(element => {
-        element.domElement.on("click", (event) => {
-          this.onSelectedElement(element);
-        })
-      });
-
     }
 
     attachButton(parent) {
@@ -71,49 +69,36 @@ H5P.UML = (function ($) {
       });
 
       this.nextButton = $('<button>', { 'class': "umlit-button umlit-navigation-next", 'type': 'button' }).appendTo(parent);
-      $(this.nextButton).html("Next");
+      $(this.nextButton).html("Finish");
       this.nextButton.on('click', () => this.onNext());
     }
 
     showResultPage() {
       console.log("showResultPage()")
-      let testScore = 0; // TODO: Remove this
-
       this.promptText.remove();
       this.display.remove()
       this.navigation.remove();
       this.sumScore = 0;
       this.resultPage = $('<div>', { 'class': "umlit-result" });
-      $('<h2>', { 'id': 'umlit-title' }).html("Results").appendTo(this.resultPage);
-      this.exercises.forEach((exercise, index) => {
-        let resultItem = $('<div>', { 'class': "umlit-result-item" })
-        let exerciseName = `${index + 1}. ${exercise.entities[0].className}`;
-        // TODO: calculate real score
-        let exerciseScore = testScore;
-        testScore += 50;
-        console.log(exerciseName, exerciseScore);
-        this.sumScore += exerciseScore;
-        if (exerciseScore == 0)
-          resultItem.addClass("umlit-result-item-wrong")
-        else if (exerciseScore == 100)
-          resultItem.addClass("umlit-result-item-right")
-        else
-          resultItem.addClass("umlit-result-item-partial");
+      let exerciseName =  this.entities[0].className;
+      $('<h2>', { 'id': 'umlit-title' }).html(`Results for ${exerciseName}`).appendTo(this.resultPage);
 
-        let resultItemNaming = $("<span>", { 'class': "umlit-result-item-name" })
-        resultItemNaming.html(exerciseName);
-        resultItemNaming.appendTo(resultItem);
+      // TODO: calculate real score
+      let userAnswers = this.entities.map((entity, index) => {
+        if(entity.isSelected)
+         return index
+       else undefined;
+     }).filter((el) => el !== undefined)
 
-        let resultItemScore = $("<span>", { 'class': "umlit-result-item-score" })
-        resultItemScore.html(exerciseScore);
-        resultItemScore.appendTo(resultItem);
+      let count = this.countMatchingElements(userAnswers, this.answers);
 
-        resultItem.appendTo(this.resultPage);
-      });
 
+      this.sumScore  = (100/this.answers.length) * count;
+      
+      console.log("Matching answers", this.sumScore);
       this.resultPage.appendTo(this.mainWrapper);
-      this.triggerXAPIScored(this.sumScore, 300, 'completed');
-    
+      $('<h2>', { 'id': 'umlit-title' }).html(`${this.sumScore}/100`).appendTo(this.resultPage);
+      this.triggerXAPIScored(this.sumScore, 100, 'completed');
     }
 
     refreshElements(exercise) {
@@ -156,8 +141,8 @@ H5P.UML = (function ($) {
       else
         this.enableNext();
 
-
     }
+
     disableNext() {
       console.log("disableNext()");
       this.nextButton.prop("disabled", true)
@@ -171,9 +156,7 @@ H5P.UML = (function ($) {
     onLoadedExercises(exercises) {
       console.log("onLoadedExercises");
 
-      this.currrentExerciseIndex = 0;
       this.refreshElements(this.getCurrentExercise());
-
     }
 
     getCurrentExercise() {
@@ -194,7 +177,7 @@ H5P.UML = (function ($) {
     }
 
     saveAnswer() {
-      this.getCurrentExercise().userAnswer = this.entities.filter(entity => entity.isSelected === true)
+      this.userAnswer = this.entities.filter(entity => entity.isSelected === true)
     }
 
     onNext() {
@@ -208,6 +191,25 @@ H5P.UML = (function ($) {
 
     isLastExercise() {
       return this.currrentExerciseIndex.length + 1 >= this.exercises.length;
+    }
+
+    countMatchingElements(...arrays) {
+      // Convert arrays to sets
+      const sets = arrays.map(arr => new Set(arr));
+    
+      // Find the smallest set
+      const smallestSet = sets.reduce((minSet, currentSet) => (currentSet.size < minSet.size ? currentSet : minSet), sets[0]);
+    
+      // Count matching elements
+      let matchingCount = 0;
+    
+      for (const element of smallestSet) {
+        if (sets.every(set => set.has(element))) {
+          matchingCount++;
+        }
+      }
+    
+      return matchingCount;
     }
   }
 

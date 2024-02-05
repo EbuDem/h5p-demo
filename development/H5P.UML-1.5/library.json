@@ -1,6 +1,6 @@
 {
-  "title": "UML It x",
-  "description": "Create UML Diagrams users have to drag and drop",
+  "title": "UML It",
+  "description": "Create UML Diagrams and have the user pick one according to the prompt",
   "majorVersion": 1,
   "minorVersion": 5,
   "patchVersion": 0,
