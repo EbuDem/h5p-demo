@@ -7,7 +7,7 @@
   "runnable": 1,
   "author": "Ebu Demirhan",
   "license": "cc-by-sa",
-  "machineName": "H5P.UML",
+  "machineName": "H5P.UMLit",
   "editorDependencies": [
     {
       "machineName": "H5PEditor.UMLEditor",

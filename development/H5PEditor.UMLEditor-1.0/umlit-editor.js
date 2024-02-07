@@ -19,8 +19,14 @@ H5PEditor.widgets.umlEditor = H5PEditor.UMLEditor = (function ($) {
     this.entities = [];
 
     var decoded = $("<div/>").html(this.params).text();
-
-    let parsedExercise = JSON.parse(decoded);
+    let parsedExercise = { entities : [], prompt: "", answers: []};
+    try{
+       parsedExercise = JSON.parse(decoded);
+    }
+    catch(exception)
+    {
+      console.error("Error while parsing exercise: ", exception);
+    }
     this.entities= parsedExercise.entities.map(parsedEntity => new UMLClass($,parsedEntity.className,parsedEntity.attributes, parsedEntity.methods));
     
     for(let i = 0; i < parsedExercise.answers.length;i++)

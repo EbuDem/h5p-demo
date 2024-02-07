@@ -12,12 +12,12 @@
     ],
     "preloadedDependencies": [
         {
-            "machineName": "H5P.UML",
+            "machineName": "H5P.UMLit",
             "majorVersion": 1,
             "minorVersion": 5
         }
     ],  
-    "mainLibrary": "H5P.UML",
+    "mainLibrary": "H5P.UMLit",
     "embedTypes": [
         "div"
     ]

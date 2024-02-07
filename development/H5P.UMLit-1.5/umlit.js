@@ -3,8 +3,8 @@ var DEBUG = true;
 
 
 var H5P = H5P || {};
-H5P.UML = (function ($) {
-  class Umlit extends H5P.EventDispatcher {
+H5P.UMLit = (function ($) {
+  class UMLit extends H5P.EventDispatcher {
 
     constructor(options, id) {
       super();
@@ -13,6 +13,7 @@ H5P.UML = (function ($) {
       this.id = id;
       this.multiSelect = false;
 
+      console.log(H5PIntegration);
       H5P.EventDispatcher.call(this);
       H5P.externalDispatcher.on('xAPI', function (event) {
         console.log(event.data.statement)
@@ -214,5 +215,5 @@ H5P.UML = (function ($) {
   }
 
 
-  return Umlit;
+  return UMLit;
 })(H5P.jQuery);

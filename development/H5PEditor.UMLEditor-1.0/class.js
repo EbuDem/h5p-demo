@@ -39,6 +39,18 @@ class UMLClass {
     return liElement;
   }
 
+  // Utility function to add an edit button
+  addEditButton(container, clickHandler) {
+    console.log(`add button to container`, container.get(0));
+    const optionsContainer = this.getOrCreateOptionsContainer(container);
+    const button = this.createElement("button", { class: "umlit-options-button button-edit", type: "button" }).appendTo(optionsContainer);
+
+    if (clickHandler) {
+      button.on("click", clickHandler);
+    }
+    return button;
+  }
+
   // Utility function to add move buttons
   addMoveButtons(liElement) {
     const attributeMoveUpButton = this.createElement("button").html("&uarr;").prependTo(liElement);
@@ -57,27 +69,13 @@ class UMLClass {
   }
 
   // Utility function to append options container
-  appendOptionsContainer(container) {
+  getOrCreateOptionsContainer(container) {
     const optionsContainer = container.find(".umlit-options-container");
     if (!optionsContainer.length) {
       return this.createElement("div", { class: "umlit-options-container" }).appendTo(container);
     } else {
       return optionsContainer;
     }
-  }
-
-  // Utility function to add an edit button
-  addEditButton(container, text, clickHandler, cssClass) {
-    console.log(`add button ${text} to container`,container.get(0));
-    const optionsContainer = this.appendOptionsContainer(container);
-    const button = this.createElement("button", { class: "umlit-options-button", type: "button" }).html(text).appendTo(optionsContainer);
-    if(cssClass)
-      button.addClass(cssClass);
-    if (clickHandler) {
-      button.on("click", clickHandler);
-    }
-
-    return button;
   }
 
   // Main function to create DOM elements
@@ -89,72 +87,125 @@ class UMLClass {
     this.attributesContainer = this.createElement("ul", { class: "umlit-class-attributes" }).appendTo(this.domElement);
     this.methodsContainer = this.createElement("ul", { class: "umlit-class-methods" }).appendTo(this.domElement);
 
-    this.refreshDOMElement();
+    this.nameContainer.isBeingEdited = false;
+    this.attributesContainer.isBeingEdited = false;
+    this.methodsContainer.isBeingEdited = false;
 
-    this.editButton = this.addEditButton(this.attributesContainer, "", () => this.editAttributes(), "button-edit");
-    this.editMethodsButton = this.addEditButton(this.methodsContainer, "", () => this.editMethods(), "button-edit");
-    this.addEditButton(this.nameContainer, "", () => this.editClassName(), "button-edit");
-    this.removeButton = this.addEditButton(this.nameContainer, "", () => {
+
+    this.attributesContainer.editBtn = this.addEditButton(this.attributesContainer, () => this.editAttributes());
+    this.attributesContainer.saveBtn = this.addSaveButton(this.attributesContainer);
+    this.attributesContainer.cancelBtn = this.addCancelButton(this.attributesContainer);
+
+    this.methodsContainer.editBtn = this.addEditButton(this.methodsContainer, () => this.editMethods());
+    this.methodsContainer.saveBtn = this.addSaveButton(this.methodsContainer);
+    this.methodsContainer.cancelBtn = this.addCancelButton(this.methodsContainer);
+
+    this.nameContainer.editBtn = this.addEditButton(this.nameContainer, () => this.editClassName());
+    this.nameContainer.removeBtn = this.addRemoveButton(this.nameContainer, () => {
       UMLClass.removeCallback(this);
-    }, "button-remove");
-
-    this.removeButton = this.addEditButton(this.nameContainer, "", () => {
+    });
+    this.nameContainer.answerBtn = this.addIsAnswerButton(this.nameContainer, () => {
       UMLClass.toggleIsAnswerCallback(this);
-    }, "button-answer");
+    });
+    this.nameContainer.saveBtn = this.addSaveButton(this.nameContainer);
+    this.nameContainer.cancelBtn = this.addCancelButton(this.nameContainer);
+
+    
+    this.refreshDOMElement();
   }
 
   // Main function to edit class name
   editClassName() {
-    this.emptyOptions(this.nameContainer);
-
     this.nameContainer.contents().filter(function () {
       return this.nodeType === 3 && UMLClass.$.trim(this.nodeValue) !== '';
     }).remove();
 
-    const saveButton = this.addEditButton(this.nameContainer, "Save");
-    const cancelButton = this.addEditButton(this.nameContainer, "Cancel");
-
-    const nameInput = this.createElement("input", { type: "text", placeholder: "Attribute" }).appendTo(this.nameContainer).val(this.className);
-
     const saveHandler = () => {
       this.className = nameInput.val();
       this.refreshNameInDOM();
-      this.emptyOptions(this.nameContainer);
 
-      this.editButton = this.addEditButton(this.nameContainer, "Edit", () => this.editClassName());
-      this.editButton = this.addEditButton(this.nameContainer, "", () => UMLClass.removeCallback(this), "button-remove");
-      this.removeButton = this.addEditButton(this.nameContainer, "", () => {
-        UMLClass.toggleIsAnswerCallback(this);
-      }, "button-answer");
+      this.nameContainer.isBeingEdited = false;
+      this.refreshContainerButtons(this.nameContainer);
+
+
       UMLClass.afterEditCallback(this);
     };
 
-    saveButton.on("click", saveHandler);
-    cancelButton.on("click", () => {
+    this.nameContainer.isBeingEdited = true;
+    this.refreshContainerButtons(this.nameContainer);
+
+    this.nameContainer.saveBtn.on("click", saveHandler);
+    this.nameContainer.cancelBtn.on("click", () => {
       this.refreshNameInDOM();
-      this.emptyOptions(this.nameContainer);
-      this.editButton = this.addEditButton(this.nameContainer, "Edit", () => this.editClass());
+      this.nameContainer.isBeingEdited = false;
+      this.refreshContainerButtons(this.nameContainer);
+
     });
+
+    const nameInput = this.createElement("input", { type: "text", placeholder: "Attribute" }).appendTo(this.nameContainer).val(this.className);
   }
 
 
-  toggleSelected()
-  {
+  toggleSelected() {
     this.isSelected = !this.isSelected;
-    if(this.isSelected)
+    if (this.isSelected)
       this.domElement.addClass("umlit-class-highlight")
-    else 
+    else
       this.domElement.removeClass("umlit-class-highlight")
   }
 
+  addCancelButton(container, clickHandler) {
+    console.log(`add cancel button  to container`, container.get(0));
+    const optionsContainer = this.getOrCreateOptionsContainer(container);
+    const button = this.createElement("button", { class: "umlit-options-button button-cancel", type: "button" }).appendTo(optionsContainer);
+    if (clickHandler) {
+      button.on("click", clickHandler);
+    }
+
+    return button;
+  }
+
+  addSaveButton(container, clickHandler) {
+    console.log(`add save button  to container`, container.get(0));
+    const optionsContainer = this.getOrCreateOptionsContainer(container);
+    const button = this.createElement("button", { class: "umlit-options-button button-save", type: "button" }).appendTo(optionsContainer);
+    if (clickHandler) {
+      button.on("click", clickHandler);
+    }
+
+    return button;
+  }
+
+  addRemoveButton(container, clickHandler) {
+    console.log(`add save button  to container`, container.get(0));
+    const optionsContainer = this.getOrCreateOptionsContainer(container);
+    const button = this.createElement("button", { class: "umlit-options-button button-remove", type: "button" }).appendTo(optionsContainer);
+    if (clickHandler) {
+      button.on("click", clickHandler);
+    }
+
+    return button;
+  }
+
+  addIsAnswerButton(container, clickHandler) {
+    console.log(`add answer button  to container`, container.get(0));
+    const optionsContainer = this.getOrCreateOptionsContainer(container);
+    const button = this.createElement("button", { class: "umlit-options-button button-answer", type: "button" }).appendTo(optionsContainer);
+    if (clickHandler) {
+      button.on("click", clickHandler);
+    }
+
+    return button;
+  }
 
   // Main function to refresh class name in DOM
   refreshNameInDOM() {
     console.log("refreshNameInDOM");
-
     this.nameContainer.children("input").remove();
-    this.appendOptionsContainer(this.nameContainer);
+    this.getOrCreateOptionsContainer(this.nameContainer);
     this.nameContainer.append(this.className);
+
+    this.refreshContainerButtons(this.nameContainer);
   }
 
   // Main function to refresh entire DOM element
@@ -167,27 +218,10 @@ class UMLClass {
     this.refreshMethodsInDOM();
   }
 
-  // Main function to refresh attributes in DOM
-  refreshAttributesInDOM() {
-    console.log("refreshAttributesInDOM");
-
-    this.appendOptionsContainer(this.attributesContainer);
-    this.attributesContainer.find("li").remove();
-
-    for (let i = 0; i < this.attributes.length; i++) {
-      const attribute = this.attributes[i];
-      this.createElement("li", { class: "umlit-class-attribute" }).html(attribute).appendTo(this.attributesContainer);
-    }
-  }
-
-  // Utility function to empty options in a container
-  emptyOptions(container) {
-    container = container.find(".umlit-options-container") || container;
-    container.find("button").remove();
-  }
 
   // Utility function to apply edits as an array
-  applyEditsAsArray(container, list, method) {
+  applyEditsAsArray(container, list) {
+
     const elements = container.find("li.editable");
     this[list] = [];
 
@@ -195,11 +229,11 @@ class UMLClass {
       const el = UMLClass.$(elements[i]);
       const input = UMLClass.$(el.find("input"));
       this[list].push(input.val());
+      console.log("DEBUG", input.val());
     }
 
     this.refreshAttributesInDOM();
-    this.emptyOptions(container);
-    this.editButton = this.addEditButton(container, "Edit", () => method());
+    this.refreshMethodsInDOM();
     UMLClass.afterEditCallback(this);
   }
 
@@ -207,10 +241,20 @@ class UMLClass {
   editAttributes() {
     console.log("editAttributes", this);
     this.attributesContainer.find("li").remove();
+    this.attributesContainer.isBeingEdited = true;
+    this.refreshContainerButtons(this.attributesContainer);
+    
+    this.attributesContainer.saveBtn.on("click", () => {
+      this.attributesContainer.isBeingEdited = false;
+      this.applyEditsAsArray(this.attributesContainer, "attributes");
+      this.refreshContainerButtons(this.attributesContainer);
+    });
 
-    this.emptyOptions(this.attributesContainer);
-    const saveButton = this.addEditButton(this.attributesContainer, "Save");
-    const cancelButton = this.addEditButton(this.attributesContainer, "Cancel");
+    this.attributesContainer.cancelBtn.on("click", () => {
+      this.attributesContainer.isBeingEdited = false;
+      this.refreshAttributesInDOM();
+      this.refreshContainerButtons(this.attributesContainer);
+    });
 
     for (let i = 0; i < this.attributes.length; i++) {
       const attribute = this.attributes[i];
@@ -218,26 +262,14 @@ class UMLClass {
     }
 
     this.addAdditionalInput(this.attributesContainer);
-
-    cancelButton.on("click", () => {
-      this.refreshAttributesInDOM();
-      this.emptyOptions(this.attributesContainer);
-      this.editButton = this.addEditButton(this.attributesContainer, "Edit", () => this.editAttributes());
-    });
-
-    saveButton.on("click", () => {
-      this.applyEditsAsArray(this.attributesContainer, "attributes", () => this.editAttributes());
-    });
   }
 
   // Main function to edit methods
   editMethods() {
     console.log("editMethods");
     this.methodsContainer.find("li").remove();
-
-    this.emptyOptions(this.methodsContainer);
-    const saveButton = this.addEditButton(this.methodsContainer, "Save");
-    const cancelButton = this.addEditButton(this.methodsContainer, "Cancel");
+    this.methodsContainer.isBeingEdited = true;
+    this.refreshContainerButtons(this.methodsContainer);
 
     for (let i = 0; i < this.methods.length; i++) {
       const method = this.methods[i];
@@ -246,34 +278,62 @@ class UMLClass {
 
     this.addAdditionalInput(this.methodsContainer, "Method");
 
-    cancelButton.on("click", () => {
+    this.methodsContainer.cancelBtn.on("click", () => {
       this.refreshMethodsInDOM();
       this.emptyOptions(this.methodsContainer);
-      this.editMethodsButton = this.addEditButton(this.methodsContainer, "Edit", () => this.editMethods());
+      this.methodsContainer.isBeingEdited = false;
     });
 
-    saveButton.on("click", () => {
-      this.applyEditsAsArray(this.methodsContainer, "methods", () => this.editMethods());
-      this.refreshMethodsInDOM();
+    this.methodsContainer.saveBtn.on("click", () => {
+      this.methodsContainer.isBeingEdited = false;
+      this.applyEditsAsArray(this.methodsContainer, "methods");
+      this.refreshContainerButtons(this.methodsContainer);
     });
   }
 
-  // Main function to refresh methods in DOM
-  refreshMethodsInDOM() {
-    console.log("refreshMethodsInDOM");
-
-    this.appendOptionsContainer(this.methodsContainer);
-    this.methodsContainer.find("li").remove();
-
-    for (let i = 0; i < this.methods.length; i++) {
-      const method = this.methods[i];
-      this.createElement("li", { class: "umlit-class-method" }).html(method).appendTo(this.methodsContainer);
+  refreshItemsInDOM(container, items, itemClass) {
+    console.log(`refresh${itemClass}InDOM`);
+  
+    this.getOrCreateOptionsContainer(container);
+    container.find("li").remove();
+    this.refreshContainerButtons(container);
+  
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      this.createElement("li", { class: `umlit-class-${itemClass}` }).html(item).appendTo(container);
     }
+  }
+
+  refreshContainerButtons(container)
+  {
+    if(container.isBeingEdited)
+    {
+      console.log("show save and cancel");
+      UMLClass.$(container.editBtn).hide();
+      UMLClass.$(container.saveBtn).show();
+      UMLClass.$(container.cancelBtn).show();
+
+    }
+    else 
+    {
+      console.log("show edit button")
+      UMLClass.$(container.editBtn).show();
+      UMLClass.$(container.saveBtn).hide();
+      UMLClass.$(container.cancelBtn).hide();
+    }
+  }
+  
+  refreshAttributesInDOM() {
+    this.refreshItemsInDOM(this.attributesContainer, this.attributes, "Attribute");
+  }
+  
+  refreshMethodsInDOM() {
+    this.refreshItemsInDOM(this.methodsContainer, this.methods, "Method");
   }
 
   // Main function to add an additional input
   addAdditionalInput(container, placeholder) {
-    console.log("addAdditionalAttributeInput");
+    console.log("addAdditionalInput");
 
     const additionalLiElement = this.createElement("li", { class: "umlit-class-attribute" }).appendTo(container);
     const additionalInput = this.createElement("input", { type: "text", placeholder }).appendTo(additionalLiElement);
@@ -281,7 +341,7 @@ class UMLClass {
     const saveElementButton = this.createElement("button").html("Add").appendTo(additionalLiElement);
 
     saveElementButton.on("click", (e) => {
-      console.log("addAttribute-click");
+      console.log("addItem-click");
       e.preventDefault();
 
       if (additionalInput.val().trim().length > 0) {

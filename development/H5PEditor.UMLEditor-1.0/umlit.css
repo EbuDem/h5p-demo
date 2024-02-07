@@ -203,6 +203,19 @@
   mask: url(icon/check.svg) no-repeat 100% 100%;
 }
 
+.button-save{
+  background-color: black;
+  -webkit-mask: url(icon/floppy-disk.svg) no-repeat 100% 100%;
+  mask: url(icon/floppy-disk.svg) no-repeat 100% 100%;
+}
+
+.button-cancel{
+  background-color: black;
+  -webkit-mask: url(icon/xmark.svg) no-repeat 100% 100%;
+  mask: url(icon/xmark.svg) no-repeat 100% 100%;
+}
+
+
 #umlit-title 
 {
   margin: 2rem 0;
