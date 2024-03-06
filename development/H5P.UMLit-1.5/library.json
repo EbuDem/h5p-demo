@@ -21,7 +21,7 @@
   },
   "preloadedJs": [
     {
-      "path": "class.js"
+      "path": "presave.js"
     },
     {
       "path": "umlit.js"
@@ -30,6 +30,13 @@
   "preloadedCss": [
     {
       "path": "umlit.css"
+    }
+  ],
+  "preloadedDependencies": [
+    {
+      "machineName": "H5P.UMLClass",
+      "majorVersion": 1,
+      "minorVersion": 0
     }
   ]
 }

@@ -1,8 +1,8 @@
 "use strict";
 var DEBUG = true;
-
-
 var H5P = H5P || {};
+var UMLClass = H5P.UMLClass;
+
 H5P.UMLit = (function ($) {
   class UMLit extends H5P.EventDispatcher {
 
@@ -13,7 +13,7 @@ H5P.UMLit = (function ($) {
       this.id = id;
       this.multiSelect = false;
 
-      console.log(H5PIntegration);
+      console.log("hmm",H5P.UMLClass);
       H5P.EventDispatcher.call(this);
       H5P.externalDispatcher.on('xAPI', function (event) {
         console.log(event.data.statement)
@@ -28,10 +28,8 @@ H5P.UMLit = (function ($) {
       console.log("fetchExercise");
       var decoded = $("<div/>").html(this.options.exercise).text();
       let parsedExercise = JSON.parse(decoded);
-      console.log("exervcise", parsedExercise);
 
       this.entities = parsedExercise.entities.map(parsedEntity => new UMLClass($, parsedEntity.className, parsedEntity.attributes, parsedEntity.methods));
-      console.log("hey", this.entities);
       this.entities.forEach(element => element.domElement.appendTo(this.display));
       this.answers = parsedExercise.answers;
 

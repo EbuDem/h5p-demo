@@ -1,4 +1,3 @@
-
 {
   "title": "H5PEditor.UMLEditor",
   "majorVersion": 1,
@@ -7,9 +6,16 @@
   "runnable": 0,
   "machineName": "H5PEditor.UMLEditor",
   "author": "Ebu Demirhan",
+  "preloadedDependencies": [
+    {
+      "machineName": "H5P.UMLClass",
+      "majorVersion": 1,
+      "minorVersion": 0
+    }
+  ],
   "preloadedJs": [
     {
-      "path": "class.js"
+      "path": "editableClass.js"
     },
     {
       "path": "umlit-editor.js"

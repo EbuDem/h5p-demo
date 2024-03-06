@@ -70,45 +70,18 @@
   grid-template-rows: 1fr 1fr 1fr;
 }
 
-.umlit-class 
-{
-  /* background: rgba(255,0,0,0.2); */
-  box-shadow: 2px 2px 2px rgba(0,0,0,0.1);
-  border: 2px solid rgba(0,0,0,0.3);
-}
-
-.umlit-class-name 
-{
-  position: relative;
-  width: 100%;
-  padding: 0.5rem;
-  border-bottom: 2px solid rgba(0,0,0,0.3);
-  background-color: rgba(0,0,0,0.1);
-  font-weight: bold;
-  text-align: center;
-  height: 3rem;
-}
-
-.umlit-class-attributes, .umlit-class-methods 
-{
-  margin-top: 0;
-  list-style: none;
-  position: relative;
-  padding:0;
-  padding-top: 2rem;
-  width: 100%;
-  padding-left: 0.5rem;
-}
-
-.umlit-class-methods{
-  border-top: 2px solid rgba(0,0,0,0.3)
-}
 
 .umlit-options-container
 {
+  z-index: 1000;
   position: absolute;
+  display: flex;
+  flex-direction:column;
+  width: 24px;
   bottom: 0;
-  right: 0;
+  right: -24px;
+  background-color: #efefef;
+  border: 1px solid black;
 }
 
 
@@ -124,62 +97,11 @@
 }
 
 
-.umlit-result {
-  min-width: 500px;
-  display: flex;
-  flex-direction: column;
-}
-
-.umlit-result-item 
-{
-  width: 100%;
-  display: flex;
-  padding: 1rem 2rem;
-  justify-content: space-between;
-  align-items: center;
-  font-weight: bold;
-  border-bottom: 3px solid rgba(0,0,0,0.3);
-  margin-bottom: 1rem;
-}
-.umlit-result-item:last-of-type
-{
-  margin-bottom: 0;
-  border: none;
-}
-.umlit-result-item-score 
-{
-  width: 100px;
-  height: 100%;
-  text-align: right;
-}
-
-.umlit-result-item-name
-{
-  width: 100px;
-  height: 100%;
-}
-
-.umlit-result-item-right 
-{
-  background: rgba(0,255,0,0.05);
-}
-
-.umlit-result-item-wrong 
-{
-  background: rgba(255,0,0,0.05);
-}
-
-
-.umlit-result-item-partial 
-{
-  background: rgba(255, 196, 0, 0.05);
-}
-
-
 .umlit-options-button {
+  height: 24px;
+  width: 24px;
+  padding: 0;
   margin: 0;
-  min-width: 2rem;
-  height: 2rem;
   background-size: contain;
   background-repeat: no-repeat;
   border: 1px solid black;
@@ -187,33 +109,46 @@
 
 .button-remove{
   background-color: red;
-  -webkit-mask: url(icon/trash.svg) no-repeat 100% 100%;
-  mask: url(icon/trash.svg) no-repeat 100% 100%;
+  -webkit-mask: url(styles/trash.svg) no-repeat 100% 100%;
+  mask: url(styles/trash.svg) no-repeat 100% 100%;
 }
 
 .button-edit{
   background-color: orange;
-  -webkit-mask: url(icon/edit-pencil.svg) no-repeat 100% 100%;
-  mask: url(icon/edit-pencil.svg) no-repeat 100% 100%;
+  -webkit-mask: url(styles/edit-pencil.svg) no-repeat 100% 100%;
+  mask: url(styles/edit-pencil.svg) no-repeat 100% 100%;
 }
 
 .button-answer{
   background-color: green;
-  -webkit-mask: url(icon/check.svg) no-repeat 100% 100%;
-  mask: url(icon/check.svg) no-repeat 100% 100%;
+  -webkit-mask: url(styles/check.svg) no-repeat 100% 100%;
+  mask: url(styles/check.svg) no-repeat 100% 100%;
 }
 
 .button-save{
   background-color: black;
-  -webkit-mask: url(icon/floppy-disk.svg) no-repeat 100% 100%;
-  mask: url(icon/floppy-disk.svg) no-repeat 100% 100%;
+  -webkit-mask: url(styles/floppy-disk.svg) no-repeat 100% 100%;
+  mask: url(styles/floppy-disk.svg) no-repeat 100% 100%;
 }
 
 .button-cancel{
   background-color: black;
-  -webkit-mask: url(icon/xmark.svg) no-repeat 100% 100%;
-  mask: url(icon/xmark.svg) no-repeat 100% 100%;
-}
+  -webkit-mask: url(styles/xmark.svg) no-repeat 100% 100%;
+  mask: url(styles/xmark.svg) no-repeat 100% 100%;
+} 
+
+.button-move-left{
+  background-color: black;
+  -webkit-mask: url(styles/arrow-left.svg) no-repeat 100% 100%;
+  mask: url(styles/arrow-left.svg) no-repeat 100% 100%;
+} 
+
+
+.button-move-right{
+  background-color: black;
+  -webkit-mask: url(styles/arrow-right.svg) no-repeat 100% 100%;
+  mask: url(styles/arrow-right.svg) no-repeat 100% 100%;
+} 
 
 
 #umlit-title 
@@ -252,4 +187,31 @@
   {
     min-width:  95%;
   }
+}
+
+
+.editable > .move-buttons-container 
+{  
+  padding: 0;
+  margin: 0;
+  float: left;
+  display: flex;
+  flex-direction: column;
+  height: 1rem;
+  width: 1rem;
+}
+
+.editable > div.move-buttons-container  > .move-button 
+{
+  padding: 0;
+  margin: 0;
+  font-size: 0.35rem;
+  text-align: center;
+  height: 0.75rem;
+}
+
+.umlit-class-options
+{
+  position: absolute;
+  top: -30px;
 }

@@ -1,0 +1,23 @@
+{
+  "libraryStrings": {
+    "exercise": "Exercise",
+    "addClass": "Add Class",
+    "deleteClass": "Delete Class",
+    "editClass": "Edit Class",
+    "markAsAnswer": "Mark as Answer",
+    "promptDeleteClass": "Are you sure you want to delete this class?",
+    "attribute": "Attribute",
+    "method": "Method",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "name": "Name",
+    "editName": "Edit Name",
+    "moveUp": "Move Up",
+    "moveDown": "Move Down",
+    "moveRight": "Move Right",
+    "moveLeft": "Move Left",
+    "save": "Save Changes",
+    "discard": "Discard Changes"
+  }
+}

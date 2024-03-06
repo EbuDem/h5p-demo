@@ -3,7 +3,7 @@
     "name": "prompt",
     "type": "text",
     "label": "Prompt",
-    "widget": "text",
+    "widget": "textarea",
     "description": "The prompt that will be presented the user."
 
   },

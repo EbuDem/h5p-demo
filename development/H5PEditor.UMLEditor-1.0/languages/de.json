@@ -1,0 +1,23 @@
+{
+  "libraryStrings": {
+    "exercise": "Übung",
+    "addClass": "Klasse hinzufügen",
+    "deleteClass": "Klasse löschen",
+    "editClass": "Klasse bearbeiten",
+    "markAsAnswer": "Als Antwort markieren",
+    "promptDeleteClass": "Möchten Sie diese Klasse wirklich löschen?",
+    "attribute": "Attribut",
+    "method": "Methode",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "add": "Hinzufügen",
+    "name": "Name",
+    "editName": "Namen bearbeiten",
+    "moveUp": "Nach oben bewegen",
+    "moveDown": "Nach unten bewegen",
+    "moveRight": "Nach rechts bewegen",
+    "moveLeft": "Nach links bewegen",
+    "save": "Änderungen speichern",
+    "discard": "Änderungen verwerfen"
+  }
+}
