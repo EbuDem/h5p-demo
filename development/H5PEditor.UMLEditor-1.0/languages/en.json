@@ -4,7 +4,7 @@
     "addClass": "Add Class",
     "deleteClass": "Delete Class",
     "editClass": "Edit Class",
-    "markAsAnswer": "Mark as Answer",
+    "markAsAnswer": "Mark as correct Answer",
     "promptDeleteClass": "Are you sure you want to delete this class?",
     "attribute": "Attribute",
     "method": "Method",
@@ -18,6 +18,7 @@
     "moveRight": "Move Right",
     "moveLeft": "Move Left",
     "save": "Save Changes",
-    "discard": "Discard Changes"
+    "discard": "Discard Changes",
+    "result": "Result"
   }
 }

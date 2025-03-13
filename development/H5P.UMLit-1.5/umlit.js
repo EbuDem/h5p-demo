@@ -61,14 +61,9 @@ H5P.UMLit = (function ($) {
     }
 
     attachButton(parent) {
-      this.previousButton = $('<button>', { 'class': "umlit-button umlit-navigation-previous", 'type': 'button' }).appendTo(parent);
-      $(this.previousButton).html("Previous");
-      this.previousButton.on('click', (e) => {
-        console.log("previousButton.click()")
-      });
 
       this.nextButton = $('<button>', { 'class': "umlit-button umlit-navigation-next", 'type': 'button' }).appendTo(parent);
-      $(this.nextButton).html("Finish");
+      $(this.nextButton).html(UMLit.t("finished"));
       this.nextButton.on('click', () => this.onNext());
     }
 
@@ -80,7 +75,7 @@ H5P.UMLit = (function ($) {
       this.sumScore = 0;
       this.resultPage = $('<div>', { 'class': "umlit-result" });
       let exerciseName =  this.entities[0].className;
-      $('<h2>', { 'id': 'umlit-title' }).html(`Results for ${exerciseName}`).appendTo(this.resultPage);
+      $('<h2>', { 'id': 'umlit-title' }).html(UMLit.t("result")).appendTo(this.resultPage);
 
       // TODO: calculate real score
       let userAnswers = this.entities.map((entity, index) => {
@@ -96,8 +91,8 @@ H5P.UMLit = (function ($) {
       
       console.log("Matching answers", this.sumScore);
       this.resultPage.appendTo(this.mainWrapper);
-      $('<h2>', { 'id': 'umlit-title' }).html(`${this.sumScore}/100`).appendTo(this.resultPage);
-      this.triggerXAPIScored(this.sumScore, 100, 'completed');
+      $('<h2>', { 'id': 'umlit-title' }).html(`${this.sumScore} of 100`).appendTo(this.resultPage);
+      this.triggerXAPIScored(this.sumScore, 100, 'completed',true,this.sumScore == 100 );
     }
 
     refreshElements(exercise) {
@@ -210,8 +205,11 @@ H5P.UMLit = (function ($) {
     
       return matchingCount;
     }
-  }
 
+    static t = (key, params) => {
+      return H5P.t('H5P.UMLit', key, params);
+    };
+  }
 
   return UMLit;
 })(H5P.jQuery);
