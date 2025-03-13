@@ -98,7 +98,6 @@ H5PEditor.widgets.umlEditor = H5PEditor.UMLEditor = (function ($) {
         }).filter((el) => el !== undefined) // Filter entities where isSelected is true
       };
 
-      console.log("sssssssssssss", this.field, this.params, this.params);
       this.setValue(this.field, JSON.stringify(this.params));
     };
 

@@ -12,5 +12,31 @@
     "type" : "text",
     "label": "Exercise",
     "widget": "umlEditor"
+  },
+  {
+    "name": "l10n",
+    "type": "group",
+    "label": "Localize",
+    "importance": "low",
+    "common": true,
+    "optional": true,
+    "fields": [
+      {
+        "name": "result",
+        "type": "text",
+        "label": "Result title",
+        "importance": "low",
+        "default": "Result",
+        "optional": true
+      },
+      {
+        "name": "finished",
+        "type": "text",
+        "label": "Finished title",
+        "importance": "low",
+        "default": "Finished",
+        "optional": true
+      }
+    ]
   }
 ]

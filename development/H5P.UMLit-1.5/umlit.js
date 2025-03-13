@@ -12,8 +12,8 @@ H5P.UMLit = (function ($) {
       this.exercises = [];
       this.id = id;
       this.multiSelect = false;
+      this.l10n = options.l10n;
 
-      console.log("hmm",H5P.UMLClass);
       H5P.EventDispatcher.call(this);
       H5P.externalDispatcher.on('xAPI', function (event) {
         console.log(event.data.statement)
@@ -25,7 +25,6 @@ H5P.UMLit = (function ($) {
     }
 
     async fetchExercise() {
-      console.log("fetchExercise");
       var decoded = $("<div/>").html(this.options.exercise).text();
       let parsedExercise = JSON.parse(decoded);
 
@@ -38,7 +37,6 @@ H5P.UMLit = (function ($) {
     }
 
     attach($container) {
-      console.log("H5P.attach()")
       $container.attr('id', "h5p-umlit-draganddrop");
 
       this.container = $container;
@@ -63,7 +61,7 @@ H5P.UMLit = (function ($) {
     attachButton(parent) {
 
       this.nextButton = $('<button>', { 'class': "umlit-button umlit-navigation-next", 'type': 'button' }).appendTo(parent);
-      $(this.nextButton).html(UMLit.t("finished"));
+      $(this.nextButton).html(this.t("finished"));
       this.nextButton.on('click', () => this.onNext());
     }
 
@@ -75,7 +73,7 @@ H5P.UMLit = (function ($) {
       this.sumScore = 0;
       this.resultPage = $('<div>', { 'class': "umlit-result" });
       let exerciseName =  this.entities[0].className;
-      $('<h2>', { 'id': 'umlit-title' }).html(UMLit.t("result")).appendTo(this.resultPage);
+      $('<h2>', { 'id': 'umlit-title' }).html(this.t("result")).appendTo(this.resultPage);
 
       // TODO: calculate real score
       let userAnswers = this.entities.map((entity, index) => {
@@ -86,10 +84,8 @@ H5P.UMLit = (function ($) {
 
       let count = this.countMatchingElements(userAnswers, this.answers);
 
-
       this.sumScore  = (100/this.answers.length) * count;
       
-      console.log("Matching answers", this.sumScore);
       this.resultPage.appendTo(this.mainWrapper);
       $('<h2>', { 'id': 'umlit-title' }).html(`${this.sumScore} of 100`).appendTo(this.resultPage);
       this.triggerXAPIScored(this.sumScore, 100, 'completed',true,this.sumScore == 100 );
@@ -206,8 +202,8 @@ H5P.UMLit = (function ($) {
       return matchingCount;
     }
 
-    static t = (key, params) => {
-      return H5P.t('H5P.UMLit', key, params);
+    t = (key) => {
+      return this.l10n[key];
     };
   }
 
