@@ -1,0 +1,42 @@
+{
+  "title": "UML It",
+  "description": "Create UML Diagrams and have the user pick one according to the prompt",
+  "majorVersion": 1,
+  "minorVersion": 5,
+  "patchVersion": 0,
+  "runnable": 1,
+  "author": "Ebu Demirhan",
+  "license": "cc-by-sa",
+  "machineName": "H5P.UMLit",
+  "editorDependencies": [
+    {
+      "machineName": "H5PEditor.UMLEditor",
+      "majorVersion": 1,
+      "minorVersion": 0
+    }
+  ],
+  "coreApi": {
+    "majorVersion": 1,
+    "minorVersion": 5
+  },
+  "preloadedJs": [
+    {
+      "path": "presave.js"
+    },
+    {
+      "path": "umlit.js"
+    }
+  ],
+  "preloadedCss": [
+    {
+      "path": "umlit.css"
+    }
+  ],
+  "preloadedDependencies": [
+    {
+      "machineName": "H5P.UMLClass",
+      "majorVersion": 1,
+      "minorVersion": 0
+    }
+  ]
+}

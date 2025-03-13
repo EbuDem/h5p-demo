@@ -1,0 +1,44 @@
+.umlit-class 
+{
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.1);
+  border: 2px solid rgba(0,0,0,0.3);
+  position: relative;
+}
+
+.umlit-class-name 
+{
+  position: relative;
+  width: 100%;
+  padding: 0.5rem;
+  border-bottom: 2px solid rgba(0,0,0,0.3);
+  background-color: rgba(0,0,0,0.1);
+  font-weight: bold;
+  text-align: center;
+  height: 3rem;
+}
+
+.umlit-class-attributes, .umlit-class-methods 
+{
+  margin-top: 0;
+  list-style: none;
+  position: relative;
+  padding: 0.5rem;
+  width: 100%;
+  min-height: 2rem;
+}
+
+.umlit-class-methods{
+  border-top: 2px solid rgba(0,0,0,0.3)
+}
+
+
+.umlit-class-highlight
+{
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
+  border: 2px solid rgba(0,0,0,0.9)
+}
+
+.umlit-button:disabled {
+  border: 0.125rem solid lightgray;
+  color: lightgray;
+}

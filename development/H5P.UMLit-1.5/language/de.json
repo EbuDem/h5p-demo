@@ -1,0 +1,15 @@
+{
+  "semantics": [
+    {
+      "label": "Aufgabenstellung",
+      "description": "Die Aufgabenstellung, die dem Benutzer präsentiert wird."
+    },
+    {
+      "label": "Aufgaben"
+    }
+  ],
+  "libraryStrings": {
+    "result": "Ergebnis",
+    "finished": "Fertig"
+  }
+}

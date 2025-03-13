@@ -1,0 +1,217 @@
+* {
+  box-sizing: border-box;
+}
+#h5p-umlit-draganddrop
+{
+  display: flex;
+  justify-content: center;
+}
+
+#h5p-umlit-editor {
+  display:flex;
+  justify-self: center;
+}
+
+#umlit-main {
+  max-width: 1000px;
+  /* background-color: red; */
+  min-height: 1000px;
+  display: flex;
+  flex-direction: column;
+}
+
+.umlit-prompt-text
+{
+  align-self: flex-start;
+  width: 100%;
+  font-weight: bold;
+  padding: 2rem 2rem;
+  background: rgba(0,255,0,0.05); 
+}
+
+.umlit-navigation{
+  margin-top: auto;
+  width: 100%;
+  /* background: rgba(0,255,255,0.05); */
+  display: flex;
+  height: 5rem;
+  align-items: center;
+  padding: 0 2rem;
+}
+
+.umlit-button 
+{
+  padding: 0.5rem;
+  border-radius: 5px 5px;
+  min-width: 5rem;
+  background: none;
+  border: 0.125rem solid black;
+}
+
+.umlit-navigation-next 
+{
+  margin-left: auto;
+}
+
+.umlit-navigation-previous 
+{
+  margin-right: auto;
+}
+
+.umlit-display 
+{
+  margin-top: 2rem;
+  width: 100%;
+  flex-grow: 1;
+  /* background: rgba(0,0,255,0.05); */
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1em;
+  grid-template-rows: 1fr 1fr 1fr;
+}
+
+
+.umlit-options-container
+{
+  z-index: 1000;
+  position: absolute;
+  display: flex;
+  flex-direction:column;
+  width: 24px;
+  bottom: 0;
+  right: -24px;
+  background-color: #efefef;
+  border: 1px solid black;
+}
+
+
+.umlit-class-highlight
+{
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
+  border: 2px solid rgba(0,128,0,0.9)
+}
+
+.umlit-button:disabled {
+  border: 0.125rem solid lightgray;
+  color: lightgray;
+}
+
+
+.umlit-options-button {
+  height: 24px;
+  width: 24px;
+  padding: 0;
+  margin: 0;
+  background-size: contain;
+  background-repeat: no-repeat;
+  border: 1px solid black;
+}
+
+.button-remove{
+  background-color: red;
+  -webkit-mask: url(styles/trash.svg) no-repeat 100% 100%;
+  mask: url(styles/trash.svg) no-repeat 100% 100%;
+}
+
+.button-edit{
+  background-color: orange;
+  -webkit-mask: url(styles/edit-pencil.svg) no-repeat 100% 100%;
+  mask: url(styles/edit-pencil.svg) no-repeat 100% 100%;
+}
+
+.button-answer{
+  background-color: green;
+  -webkit-mask: url(styles/check.svg) no-repeat 100% 100%;
+  mask: url(styles/check.svg) no-repeat 100% 100%;
+}
+
+.button-save{
+  background-color: black;
+  -webkit-mask: url(styles/floppy-disk.svg) no-repeat 100% 100%;
+  mask: url(styles/floppy-disk.svg) no-repeat 100% 100%;
+}
+
+.button-cancel{
+  background-color: black;
+  -webkit-mask: url(styles/xmark.svg) no-repeat 100% 100%;
+  mask: url(styles/xmark.svg) no-repeat 100% 100%;
+} 
+
+.button-move-left{
+  background-color: black;
+  -webkit-mask: url(styles/arrow-left.svg) no-repeat 100% 100%;
+  mask: url(styles/arrow-left.svg) no-repeat 100% 100%;
+} 
+
+
+.button-move-right{
+  background-color: black;
+  -webkit-mask: url(styles/arrow-right.svg) no-repeat 100% 100%;
+  mask: url(styles/arrow-right.svg) no-repeat 100% 100%;
+} 
+
+
+#umlit-title 
+{
+  margin: 2rem 0;
+}
+/* Responsive styles for smaller screens */
+@media only screen and (max-width: 1024px) {
+  .umlit-display {
+    grid-template-columns: repeat(2, 1fr); /* Two equal columns */
+  }
+
+  #umlit-main 
+  {
+    max-width: 100%;
+    width: 95%;
+  }
+  .umlit-result 
+  {
+    min-width:  95%;
+  }
+}
+
+/* Responsive styles for even smaller screens */
+@media only screen and (max-width: 480px) {
+  .umlit-display {
+    grid-template-columns: 1fr; /* Single column */
+  }
+
+  #umlit-main 
+  {
+    max-width: 100%;
+    width: 100%;
+  }
+  .umlit-result 
+  {
+    min-width:  95%;
+  }
+}
+
+
+.editable > .move-buttons-container 
+{  
+  padding: 0;
+  margin: 0;
+  float: left;
+  display: flex;
+  flex-direction: column;
+  height: 1rem;
+  width: 1rem;
+}
+
+.editable > div.move-buttons-container  > .move-button 
+{
+  padding: 0;
+  margin: 0;
+  font-size: 0.35rem;
+  text-align: center;
+  height: 0.75rem;
+}
+
+.umlit-class-options
+{
+  position: absolute;
+  top: -30px;
+}

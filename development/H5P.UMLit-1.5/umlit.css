@@ -1,0 +1,159 @@
+
+#h5p-umlit-draganddrop
+{
+  display: flex;
+  justify-content: center;
+}
+
+#umlit-main {
+  max-width: 1000px;
+  /* background-color: red; */
+  min-height: 1000px;
+  display: flex;
+  flex-direction: column;
+}
+
+.umlit-prompt-text
+{
+  align-self: flex-start;
+  width: 100%;
+  font-weight: bold;
+  padding: 2rem 2rem;
+  background: rgba(0,255,0,0.05); 
+}
+
+.umlit-navigation{
+  margin-top: auto;
+  width: 100%;
+  /* background: rgba(0,255,255,0.05); */
+  display: flex;
+  height: 5rem;
+  align-items: center;
+  padding: 0 2rem;
+}
+
+.umlit-button 
+{
+  padding: 0.5rem;
+  border-radius: 5px 5px;
+  min-width: 5rem;
+  background: none;
+  border: 0.125rem solid black;
+}
+
+.umlit-navigation-next 
+{
+  margin-left: auto;
+}
+
+.umlit-navigation-previous 
+{
+  margin-right: auto;
+}
+
+.umlit-display 
+{
+  margin-top: 2rem;
+  width: 100%;
+  flex-grow: 1;
+  /* background: rgba(0,0,255,0.05); */
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1em;
+  grid-template-rows: 1fr 1fr 1fr;
+}
+
+.umlit-button:disabled {
+  border: 0.125rem solid lightgray;
+  color: lightgray;
+}
+
+
+.umlit-result {
+  min-width: 500px;
+  display: flex;
+  flex-direction: column;
+}
+
+.umlit-result-item 
+{
+  width: 100%;
+  display: flex;
+  padding: 1rem 2rem;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  border-bottom: 3px solid rgba(0,0,0,0.3);
+  margin-bottom: 1rem;
+}
+.umlit-result-item:last-of-type
+{
+  margin-bottom: 0;
+  border: none;
+}
+.umlit-result-item-score 
+{
+  width: 100px;
+  height: 100%;
+  text-align: right;
+}
+
+.umlit-result-item-name
+{
+  width: 100px;
+  height: 100%;
+}
+
+.umlit-result-item-right 
+{
+  background: rgba(0,255,0,0.05);
+}
+
+.umlit-result-item-wrong 
+{
+  background: rgba(255,0,0,0.05);
+}
+
+
+.umlit-result-item-partial 
+{
+  background: rgba(255, 196, 0, 0.05);
+}
+
+#umlit-title 
+{
+  margin: 2rem 0;
+}
+/* Responsive styles for smaller screens */
+@media only screen and (max-width: 1024px) {
+  .umlit-display {
+    grid-template-columns: repeat(2, 1fr); /* Two equal columns */
+  }
+
+  #umlit-main 
+  {
+    max-width: 100%;
+    width: 95%;
+  }
+  .umlit-result 
+  {
+    min-width:  95%;
+  }
+}
+
+/* Responsive styles for even smaller screens */
+@media only screen and (max-width: 480px) {
+  .umlit-display {
+    grid-template-columns: 1fr; /* Single column */
+  }
+
+  #umlit-main 
+  {
+    max-width: 100%;
+    width: 100%;
+  }
+  .umlit-result 
+  {
+    min-width:  95%;
+  }
+}

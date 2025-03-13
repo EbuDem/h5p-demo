@@ -1,0 +1,16 @@
+[
+  {
+    "name": "prompt",
+    "type": "text",
+    "label": "Prompt",
+    "widget": "textarea",
+    "description": "The prompt that will be presented the user."
+
+  },
+  {
+    "name": "exercise",
+    "type" : "text",
+    "label": "Exercise",
+    "widget": "umlEditor"
+  }
+]

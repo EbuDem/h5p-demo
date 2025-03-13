@@ -1,0 +1,19 @@
+{
+  "title": "H5P.UMLClass",
+  "majorVersion": 1,
+  "minorVersion": 0,
+  "patchVersion": 0,
+  "runnable": 0,
+  "machineName":"H5P.UMLClass",
+  "author": "Ebu Demirhan",
+  "preloadedJs": [
+    {
+      "path": "class.js"
+    }
+  ],
+  "preloadedCss": [
+    {
+      "path": "uml.css"
+    }
+  ]
+}
