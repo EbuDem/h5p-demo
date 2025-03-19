@@ -1,28 +1,48 @@
 H5P.UMLClass = (function ($) {
   class UMLClass {
-    static $;
-    constructor($, className, attributes, methods) {
+    constructor( className, attributes, methods) {
       this.className = className;
       this.attributes = attributes || [];
       this.methods = methods || [];
       this.isSelected = false;
-      UMLClass.$ = $;
+      this.isAnswer = false;
+ 
       this.createDOMElement();
     }
 
-    toggleSelected() {
+    toggleIsSelected() {
       this.isSelected = !this.isSelected;
-      if (this.isSelected)
-        this.domElement.addClass("umlit-class-highlight")
-      else
-        this.domElement.removeClass("umlit-class-highlight")
+      this.refreshDOMElement();
+    }
+    
+    toggleIsAnswer() {
+      this.isAnswer = !this.isAnswer;
+      this.refreshDOMElement();
+    }
+
+    setIsAnswer(val)
+    {
+      this.isAnswer = val;
+      this.refreshDOMElement();
+    }
+
+    setIsSelected(val)
+    {
+      this.isSelected = val;
+      this.refreshDOMElement();
     }
 
     refreshDOMElement() {
       if (this.isSelected)
+        this.domElement.addClass("umlit-class-selected")
+      else
+        this.domElement.removeClass("umlit-class-selected")
+
+      if (this.isAnswer)
         this.domElement.addClass("umlit-class-highlight")
       else
         this.domElement.removeClass("umlit-class-highlight")
+
 
       this.refreshNameInDOM();
       this.refreshAttributesInDOM();
@@ -30,8 +50,7 @@ H5P.UMLClass = (function ($) {
     }
 
     refreshNameInDOM() {
-      this.nameContainer.children("input").remove();
-      this.nameContainer.append(this.className);
+      this.nameContainer.html(this.className)
     }
 
     refreshItemsInDOM(container, items, itemClass) {
@@ -67,7 +86,7 @@ H5P.UMLClass = (function ($) {
     }
 
     createElement(tag, options) {
-      return UMLClass.$(`<${tag}>`, options);
+      return $(`<${tag}>`, options);
     }
   }
 

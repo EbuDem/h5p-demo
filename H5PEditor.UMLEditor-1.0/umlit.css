@@ -1,14 +1,14 @@
 * {
   box-sizing: border-box;
 }
-#h5p-umlit-draganddrop
-{
+
+#h5p-umlit-draganddrop {
   display: flex;
   justify-content: center;
 }
 
 #h5p-umlit-editor {
-  display:flex;
+  display: flex;
   justify-self: center;
 }
 
@@ -20,16 +20,15 @@
   flex-direction: column;
 }
 
-.umlit-prompt-text
-{
+.umlit-prompt-text {
   align-self: flex-start;
   width: 100%;
   font-weight: bold;
   padding: 2rem 2rem;
-  background: rgba(0,255,0,0.05); 
+  background: rgba(0, 255, 0, 0.05);
 }
 
-.umlit-navigation{
+.umlit-navigation {
   margin-top: auto;
   width: 100%;
   /* background: rgba(0,255,255,0.05); */
@@ -39,178 +38,189 @@
   padding: 0 2rem;
 }
 
-.umlit-button 
-{
-  padding: 0.5rem;
-  border-radius: 5px 5px;
-  min-width: 5rem;
-  background: none;
-  border: 0.125rem solid black;
-}
-
-.umlit-navigation-next 
-{
+.umlit-navigation-next {
   margin-left: auto;
 }
 
-.umlit-navigation-previous 
-{
+.umlit-navigation-previous {
   margin-right: auto;
 }
 
-.umlit-display 
-{
+#umlit-display {
   margin-top: 2rem;
   width: 100%;
   flex-grow: 1;
-  /* background: rgba(0,0,255,0.05); */
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 1em;
 }
 
-
-.umlit-options-container
-{
-  z-index: 1000;
-  position: absolute;
-  display: flex;
-  flex-direction:column;
-  width: 24px;
-  bottom: 0;
-  right: -24px;
-  background-color: #efefef;
-  border: 1px solid black;
-}
-
-
-.umlit-class-highlight
-{
-  box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
-  border: 2px solid rgba(0,128,0,0.9)
-}
-
-.umlit-button:disabled {
-  border: 0.125rem solid lightgray;
-  color: lightgray;
-}
-
-
-.umlit-options-button {
-  height: 24px;
-  width: 24px;
-  padding: 0;
-  margin: 0;
-  background-size: contain;
-  background-repeat: no-repeat;
-  border: 1px solid black;
-}
-
-.button-remove{
+.button-remove {
   background-color: red;
   -webkit-mask: url(styles/trash.svg) no-repeat 100% 100%;
   mask: url(styles/trash.svg) no-repeat 100% 100%;
 }
 
-.button-edit{
+.button-edit {
   background-color: orange;
   -webkit-mask: url(styles/edit-pencil.svg) no-repeat 100% 100%;
   mask: url(styles/edit-pencil.svg) no-repeat 100% 100%;
 }
 
-.button-answer{
+.button-answer {
   background-color: green;
   -webkit-mask: url(styles/check.svg) no-repeat 100% 100%;
   mask: url(styles/check.svg) no-repeat 100% 100%;
 }
 
-.button-save{
+.button-save {
   background-color: black;
   -webkit-mask: url(styles/floppy-disk.svg) no-repeat 100% 100%;
   mask: url(styles/floppy-disk.svg) no-repeat 100% 100%;
 }
 
-.button-cancel{
+.button-cancel {
   background-color: black;
   -webkit-mask: url(styles/xmark.svg) no-repeat 100% 100%;
   mask: url(styles/xmark.svg) no-repeat 100% 100%;
-} 
+}
 
-.button-move-left{
+.button-move-left {
   background-color: black;
   -webkit-mask: url(styles/arrow-left.svg) no-repeat 100% 100%;
   mask: url(styles/arrow-left.svg) no-repeat 100% 100%;
-} 
+}
 
 
-.button-move-right{
+.button-move-right {
   background-color: black;
   -webkit-mask: url(styles/arrow-right.svg) no-repeat 100% 100%;
   mask: url(styles/arrow-right.svg) no-repeat 100% 100%;
-} 
-
-
-#umlit-title 
-{
-  margin: 2rem 0;
 }
+
 /* Responsive styles for smaller screens */
 @media only screen and (max-width: 1024px) {
-  .umlit-display {
-    grid-template-columns: repeat(2, 1fr); /* Two equal columns */
+  #umlit-display {
+    grid-template-columns: repeat(2, 1fr);
+    /* Two equal columns */
   }
 
-  #umlit-main 
-  {
+  #umlit-main {
     max-width: 100%;
     width: 95%;
   }
-  .umlit-result 
-  {
-    min-width:  95%;
+
+  .umlit-result {
+    min-width: 95%;
   }
 }
 
 /* Responsive styles for even smaller screens */
 @media only screen and (max-width: 480px) {
-  .umlit-display {
-    grid-template-columns: 1fr; /* Single column */
+  #umlit-display {
+    grid-template-columns: 1fr;
+    /* Single column */
   }
 
-  #umlit-main 
-  {
+  #umlit-main {
     max-width: 100%;
     width: 100%;
   }
-  .umlit-result 
-  {
-    min-width:  95%;
+
+  .umlit-result {
+    min-width: 95%;
   }
 }
 
+.umlit-class {
+  cursor: grab;
+  user-select: none;
+}
 
-.editable > .move-buttons-container 
-{  
+.editable {
+  height: 2rem;
+  display: flex;
+}
+
+.editable>input {
+  height: 2rem;
+  flex: 1;
+  box-sizing: border-box;
+}
+
+
+.editable>.move-buttons-container {
   padding: 0;
   margin: 0;
   float: left;
   display: flex;
   flex-direction: column;
-  height: 1rem;
+  height: 100%;
   width: 1rem;
 }
 
-.editable > div.move-buttons-container  > .move-button 
-{
+.editable>div.move-buttons-container>.move-button {
   padding: 0;
   margin: 0;
   font-size: 0.35rem;
   text-align: center;
-  height: 0.75rem;
+  height: 50%;
 }
 
-.umlit-class-options
-{
+.editable>button {
+  height: 100%;
+}
+
+.umlit-class-options {
   position: absolute;
   top: -30px;
+}
+
+
+.umlit-editor-popup {
+  background: rgba(0, 0, 0, 0.8);
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  position: absolute;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-rows: 1fr minmax(2fr, 5rem) 1fr;
+  z-index: 1000;
+}
+
+.umlit-editor-popup .umlit-class {
+  grid-column: 2;
+  /* Place item in the second column */
+  grid-row: 2;
+  /* Place item in the second row */
+  background: white;
+}
+
+
+.umlit-editor-popup .umlit-class>.umlit-class-name {
+  padding: 0;
+}
+
+.umlit-editor-popup .umlit-class-attribute:last-child,
+.umlit-editor-popup .umlit-class-method:last-child {
+  margin-top: 2rem;
+}
+
+
+.umlit-editor-popup .umlit-class-attribute>input,
+.umlit-editor-popup .umlit-class-method:last-child {}
+
+.umlit-editor-popup-buttons {
+  grid-row: 3;
+  grid-column: 2;
+  display: flex;
+  justify-content: space-around;
+  padding: 1rem;
+}
+
+
+.umlit-editor-popup-buttons>button {
+  height: 2rem;
 }

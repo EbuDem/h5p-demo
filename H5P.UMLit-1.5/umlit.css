@@ -19,7 +19,8 @@
   width: 100%;
   font-weight: bold;
   padding: 2rem 2rem;
-  background: rgba(0,255,0,0.05); 
+  background: rgba(0,0,0,0.05);
+  border-bottom: 2px solid rgba(0,0,0,0.2);
 }
 
 .umlit-navigation{
@@ -30,15 +31,6 @@
   height: 5rem;
   align-items: center;
   padding: 0 2rem;
-}
-
-.umlit-button 
-{
-  padding: 0.5rem;
-  border-radius: 5px 5px;
-  min-width: 5rem;
-  background: none;
-  border: 0.125rem solid black;
 }
 
 .umlit-navigation-next 
@@ -53,20 +45,13 @@
 
 .umlit-display 
 {
-  margin-top: 2rem;
   width: 100%;
   flex-grow: 1;
-  /* background: rgba(0,0,255,0.05); */
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 1em;
+  padding: 2rem;
 }
-
-.umlit-button:disabled {
-  border: 0.125rem solid lightgray;
-  color: lightgray;
-}
-
 
 .umlit-result {
   min-width: 500px;
@@ -119,10 +104,6 @@
   background: rgba(255, 196, 0, 0.05);
 }
 
-#umlit-title 
-{
-  margin: 2rem 0;
-}
 /* Responsive styles for smaller screens */
 @media only screen and (max-width: 1024px) {
   .umlit-display {

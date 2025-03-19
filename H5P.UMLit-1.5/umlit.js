@@ -28,7 +28,7 @@ H5P.UMLit = (function ($) {
       var decoded = $("<div/>").html(this.options.exercise).text();
       let parsedExercise = JSON.parse(decoded);
 
-      this.entities = parsedExercise.entities.map(parsedEntity => new UMLClass($, parsedEntity.className, parsedEntity.attributes, parsedEntity.methods));
+      this.entities = parsedExercise.entities.map(parsedEntity => new UMLClass(parsedEntity.className, parsedEntity.attributes, parsedEntity.methods));
       this.entities.forEach(element => element.domElement.appendTo(this.display));
       this.answers = parsedExercise.answers;
 
@@ -72,7 +72,6 @@ H5P.UMLit = (function ($) {
       this.navigation.remove();
       this.sumScore = 0;
       this.resultPage = $('<div>', { 'class': "umlit-result" });
-      let exerciseName =  this.entities[0].className;
       $('<h2>', { 'id': 'umlit-title' }).html(this.t("result")).appendTo(this.resultPage);
 
       // TODO: calculate real score
@@ -82,9 +81,9 @@ H5P.UMLit = (function ($) {
        else undefined;
      }).filter((el) => el !== undefined)
 
-      let count = this.countMatchingElements(userAnswers, this.answers);
+      let info = this.countScore(userAnswers, this.answers);
 
-      this.sumScore  = (100/this.answers.length) * count;
+      this.sumScore  = Math.round( info.scorePercentage * 1000)/10;
       
       this.resultPage.appendTo(this.mainWrapper);
       $('<h2>', { 'id': 'umlit-title' }).html(`${this.sumScore} of 100`).appendTo(this.resultPage);
@@ -92,6 +91,7 @@ H5P.UMLit = (function ($) {
     }
 
     refreshElements(exercise) {
+      
       this.promptText.html(exercise.prompt)
 
       this.display.html("");
@@ -107,7 +107,6 @@ H5P.UMLit = (function ($) {
     }
 
     onSelectedElement(entity) {
-      console.log("onSelectedElement(entity)");
       if (this.multiSelect) {
         entity.isSelected = !entity.isSelected; // toggle highlight;
         entity.refreshDOMElement();
@@ -143,12 +142,6 @@ H5P.UMLit = (function ($) {
       this.nextButton.prop("disabled", false)
     }
 
-    onLoadedExercises(exercises) {
-      console.log("onLoadedExercises");
-
-      this.refreshElements(this.getCurrentExercise());
-    }
-
     getCurrentExercise() {
       return this.exercises[this.currrentExerciseIndex]
     };
@@ -173,34 +166,36 @@ H5P.UMLit = (function ($) {
     onNext() {
       console.log("onNext()")
       this.saveAnswer()
-      if (!this.loadNextExercise()) {
-        this.showResultPage();
-        console.log(this)
-      }
+      this.showResultPage();
     }
 
-    isLastExercise() {
-      return this.currrentExerciseIndex.length + 1 >= this.exercises.length;
-    }
+    countScore(selected, answers) {
+      console.log(selected,answers);
+      let answersSet = new Set(answers);
+      let selectedSet = new Set(selected);
 
-    countMatchingElements(...arrays) {
-      // Convert arrays to sets
-      const sets = arrays.map(arr => new Set(arr));
-    
-      // Find the smallest set
-      const smallestSet = sets.reduce((minSet, currentSet) => (currentSet.size < minSet.size ? currentSet : minSet), sets[0]);
-    
-      // Count matching elements
-      let matchingCount = 0;
-    
-      for (const element of smallestSet) {
-        if (sets.every(set => set.has(element))) {
-          matchingCount++;
+      let correctAnswers = 0;
+      let incorrectAnswers = 0;
+      let missingAnswers = 0;
+
+      selectedSet.forEach(element => {
+        if (answersSet.has(element)) {
+          correctAnswers++
         }
-      }
-    
-      return matchingCount;
+        else {
+          incorrectAnswers++;
+        }
+      });
+
+      answersSet.forEach(element => {
+        if(!selectedSet.has(element))
+         missingAnswers++;
+      })
+
+      console.log(correctAnswers,missingAnswers,incorrectAnswers);
+      return { scorePercentage: (correctAnswers- (incorrectAnswers))/answers.length, missingAnswers, correctAnswers, incorrectAnswers}
     }
+
 
     t = (key) => {
       return this.l10n[key];
