@@ -18,8 +18,8 @@
     "moveDown": "Move Down",
     "moveRight": "Move Right",
     "moveLeft": "Move Left",
-    "save": "Save Changes",
-    "discard": "Discard Changes",
+    "save": "Save",
+    "cancel": "Cancel",
     "result": "Result"
   }
 }

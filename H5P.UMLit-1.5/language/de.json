@@ -1,23 +1,24 @@
-[
-  {
-    "label": "Aufgabenstellung",
-    "description": "Die Aufgabenstellung, die dem Benutzer präsentiert wird."
-
-  },
-  {
-    "label": "Aufgabe"
-  },
-  {
-    "label": "Localize",
-    "fields": [
-      {
-        "label": "Ergebnis Titel",
-        "default": "Ergebnis"
-      },
-      {
-        "label": "Fertig Beschriftung",
-        "default": "Fertig"
-      }
-    ]
-  }
-]
+{
+  "semantics": [
+    {
+      "label": "Aufgabenstellung",
+      "description": "Die Aufgabenstellung, die dem Benutzer präsentiert wird."
+    },
+    {
+      "label": "Aufgabe"
+    },
+    {
+      "label": "Localize",
+      "fields": [
+        {
+          "label": "Ergebnis Titel",
+          "default": "Ergebnis"
+        },
+        {
+          "label": "Fertig Beschriftung",
+          "default": "Fertig"
+        }
+      ]
+    }
+  ]
+}

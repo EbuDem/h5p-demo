@@ -193,7 +193,8 @@ H5P.UMLit = (function ($) {
       })
 
       console.log(correctAnswers,missingAnswers,incorrectAnswers);
-      return { scorePercentage: (correctAnswers- (incorrectAnswers))/answers.length, missingAnswers, correctAnswers, incorrectAnswers}
+      let scorePercentage = Math.max( (correctAnswers- (incorrectAnswers))/answers.length,0);
+      return { scorePercentage, missingAnswers, correctAnswers, incorrectAnswers}
     }
 
 

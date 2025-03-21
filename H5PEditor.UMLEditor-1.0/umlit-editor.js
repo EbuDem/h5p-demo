@@ -133,13 +133,19 @@ H5PEditor.widgets.umlEditor = H5PEditor.UMLEditor = (function ($) {
 
       self.$popup.hide();
 
+      var titleContainer = $('<div>', { 'class': 'umlit-editor-popup-title'});
+      self.$popupTitle = $('<h3>', { 'class': ''});
+      titleContainer.append(self.$popupTitle);
+      self.$popup.append(titleContainer);
+
+
       var popupButtons = $('<div>', {
         class: 'umlit-editor-popup-buttons',
         style: '' // add any inline styles if needed
       })
 
-      var saveBtn = $('<button>', { text: 'Save' });
-      var cancelBtn = $('<button>', { text: 'Cancel' });
+      var saveBtn = $('<button>', { text: UmlitEditor.t("save") });
+      var cancelBtn = $('<button>', { text:  UmlitEditor.t("cancel")  });
       popupButtons.append(
         saveBtn,
         cancelBtn
@@ -179,6 +185,7 @@ H5PEditor.widgets.umlEditor = H5PEditor.UMLEditor = (function ($) {
     showEditClassPopup(entity) {
       self.$popup.show();
       if (entity) {
+        self.$popupTitle.html(UmlitEditor.t('editClass'));   
         let classToBeUpdated = new EditableUMLClass(entity.className, entity.attributes, entity.methods);
         classToBeUpdated.domElement.appendTo(self.$popup);
         classToBeUpdated.before = entity;
@@ -186,6 +193,7 @@ H5PEditor.widgets.umlEditor = H5PEditor.UMLEditor = (function ($) {
         self.$popup.$object = classToBeUpdated;
       }
       else {
+        self.$popupTitle.html( UmlitEditor.t('addClass'));   
         let classToBeCreated = new EditableUMLClass();
         classToBeCreated.domElement.appendTo(self.$popup);
         classToBeCreated.makeItEditable();
