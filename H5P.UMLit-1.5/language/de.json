@@ -17,6 +17,10 @@
         {
           "label": "Fertig Beschriftung",
           "default": "Fertig"
+        },
+        {
+          "label": "Ergebnistext Vorlage",
+          "default": "Sie haben {0}% der richtigen Optionen ausgewählt."
         }
       ]
     }

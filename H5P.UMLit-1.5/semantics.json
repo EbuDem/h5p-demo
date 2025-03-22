@@ -36,6 +36,14 @@
         "importance": "low",
         "default": "Finished",
         "optional": true
+      },
+      {
+        "name": "resultPoints",
+        "type": "text",
+        "label": "Result template",
+        "importante": "low",
+        "default": "You selected {0}% of the correct options.",
+        "optional": true
       }
     ]
   }

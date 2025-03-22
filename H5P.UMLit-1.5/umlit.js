@@ -86,8 +86,15 @@ H5P.UMLit = (function ($) {
       this.sumScore  = Math.round( info.scorePercentage * 1000)/10;
       
       this.resultPage.appendTo(this.mainWrapper);
-      $('<h2>', { 'id': 'umlit-title' }).html(`${this.sumScore} of 100`).appendTo(this.resultPage);
+
+      let resultString = this.formatTemplate(this.t("resultPoints"), this.sumScore,100);
+
+      $('<h2>', { 'id': 'umlit-title' }).html(resultString).appendTo(this.resultPage);
       this.triggerXAPIScored(this.sumScore, 100, 'completed',true,this.sumScore == 100 );
+    }
+
+    formatTemplate(template, a, b) {
+      return template.replace(/\{0\}/g, a).replace(/\{1\}/g, b);
     }
 
     refreshElements(exercise) {
@@ -193,7 +200,7 @@ H5P.UMLit = (function ($) {
       })
 
       console.log(correctAnswers,missingAnswers,incorrectAnswers);
-      let scorePercentage = Math.max( (correctAnswers- (incorrectAnswers))/answers.length,0);
+      let scorePercentage = Math.max( (correctAnswers- incorrectAnswers)/answers.length,0);
       return { scorePercentage, missingAnswers, correctAnswers, incorrectAnswers}
     }
 
