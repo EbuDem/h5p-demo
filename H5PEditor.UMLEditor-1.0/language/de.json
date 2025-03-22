@@ -4,7 +4,8 @@
     "addClass": "Klasse hinzufügen",
     "deleteClass": "Klasse löschen",
     "editClass": "Klasse bearbeiten",
-    "markAsAnswer": "Als richtige Antwort markieren",
+    "markAsAnswer": "Als Antwort markieren",
+    "unmarkAsAnswer": "Markierung aufheben",
     "promptDeleteClass": "Möchten Sie diese Klasse wirklich löschen?",
     "attribute": "Attribut",
     "method": "Methode",
@@ -17,8 +18,8 @@
     "moveDown": "Nach unten bewegen",
     "moveRight": "Nach rechts bewegen",
     "moveLeft": "Nach links bewegen",
-    "save": "Änderungen speichern",
-    "discard": "Änderungen verwerfen",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
     "result": "Ergebnis"
   }
 }

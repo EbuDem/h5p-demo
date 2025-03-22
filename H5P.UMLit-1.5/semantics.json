@@ -1,0 +1,50 @@
+[
+  {
+    "name": "prompt",
+    "type": "text",
+    "label": "Prompt",
+    "widget": "textarea",
+    "description": "The prompt that will be presented the user."
+
+  },
+  {
+    "name": "exercise",
+    "type" : "text",
+    "label": "Exercise",
+    "widget": "umlEditor"
+  },
+  {
+    "name": "l10n",
+    "type": "group",
+    "label": "Localize",
+    "importance": "low",
+    "common": true,
+    "optional": true,
+    "fields": [
+      {
+        "name": "result",
+        "type": "text",
+        "label": "Result title",
+        "importance": "low",
+        "default": "Result",
+        "optional": true
+      },
+      {
+        "name": "finished",
+        "type": "text",
+        "label": "Finished title",
+        "importance": "low",
+        "default": "Finished",
+        "optional": true
+      },
+      {
+        "name": "resultPoints",
+        "type": "text",
+        "label": "Result template",
+        "importante": "low",
+        "default": "You selected {0}% of the correct options.",
+        "optional": true
+      }
+    ]
+  }
+]
